@@ -19,15 +19,15 @@ public class OrderServlet extends MyServlet {
 
 		String uri = req.getRequestURI();
 
-		if (uri.indexOf("order_ok") != -1) {
+		if (uri.indexOf("order_ok.do") != -1) {
 			orderSubmit(req, resp);
-		} else if (uri.indexOf("order") != -1) {
+		} else if (uri.indexOf("order.do") != -1) {
 			order(req, resp);
-		} else if (uri.indexOf("cart_add") != -1) {
+		} else if (uri.indexOf("cart_add.do") != -1) {
 			cartAdd(req, resp);
-		} else if (uri.indexOf("cart_delete") != -1) {
+		} else if (uri.indexOf("cart_delete.do") != -1) {
 			cartDelete(req, resp);
-		} else if (uri.indexOf("cart") != -1) {
+		} else if (uri.indexOf("cart.do") != -1) {
 			cartList(req, resp);
 		}
 	}
