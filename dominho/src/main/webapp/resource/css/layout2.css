@@ -1,0 +1,91 @@
+@charset "UTF-8";
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+	margin: 0;
+}
+
+
+.header-top {
+	width:100%;
+	height: 50px;
+}
+
+.header-left {
+	float: left;
+	margin-left: 50px;
+}
+.header-right {
+	margin-right: 50px;
+	font-size: 15px;
+	float: right;
+}
+.header-right a {
+	text-decoration:none;
+	color : #0E191A;
+}
+
+.menu {
+	font-size:20px;
+	height:50px;
+	margin: 25px 25px 0 25px;
+}
+
+.menu .nav .un {
+	width: 50px;
+}
+
+ul.nav > li {
+	float:left;
+    position: relative;
+    width: 15%;
+}
+
+ul.nav>li, 
+ul.nav>li a{
+	color : #0E191A;
+	text-decoration:none;
+    display: inline-block;
+    padding: 5px 10px;
+    text-align: center;
+    cursor: pointer;
+}
+
+ul.nav>li >ul.submenu {
+	display: none;
+	position: relative;
+}
+
+ul.nav>li >ul.submenu:hover {
+	display: inline-block;
+	position: absolute;
+}
+
+#container {
+	margin: 0 auto;
+	background:#505050; /*구분 편의하게 넣어놓은 것입니다...*/
+	width: 80%;
+	min-height: 800px;
+}
+
+.main-content {
+	padding: 30px;
+}
+
+.footer-area {
+	border-top: 1px solid gray;
+}
+
+.footer-box {
+	margin: 20px;
+}
+
+.footer-contact {
+	margin-bottom: 10px;
+}
+
+

@@ -1,0 +1,43 @@
+@charset "UTF-8";
+
+* {
+	font-family:'KOTRA_GOTHIC';
+}
+
+.menu {
+	border: 2px solid #e6e6e6;
+	border-radius:30px;
+	list-style: none;
+	
+}
+
+.un::after {
+  content: '';
+  width: 0px;
+  height: 1px;
+  display: block;
+  background:  #0E191A;
+  transition: 300ms;
+}
+
+.un:hover::after {
+  width: 100%;
+}
+.nav li a:visited {
+	color: #0E191A;
+}
+
+.header-right a, .footer-contact a, .footer-contact a:visited {
+	text-decoration: none;
+	color : #0E191A;
+}
+.footer-info p {
+	font-size: 14px;
+}
+
+@font-face {
+    font-family: 'KOTRA_GOTHIC';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10-21@1.0/KOTRA_GOTHIC.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
