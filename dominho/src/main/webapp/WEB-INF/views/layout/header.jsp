@@ -12,7 +12,7 @@
 		</p>
 	</div>
 	<div class="header-right">
-		<div style="padding-top: 20px; float: right;">
+		<div style="padding-top: 20px;" class="sessions">
 			<c:if test="${empty sessionScope.member}">
 				<a href="${pageContext.request.contextPath}/member/login.do">로그인</a>
                     &nbsp;|&nbsp;

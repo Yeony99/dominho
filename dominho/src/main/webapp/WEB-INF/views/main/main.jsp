@@ -21,8 +21,8 @@
 	<div id="container">
 		<div class="main-container">
 			<div class="main-content">
-				<p>여기에 신메뉴나 할인 내용 대충 넣어놓으면 어떨까용</p>
-				<p>이건 참고용으로 색깔 넣어놨어요,,,^.^</p>
+				<p>할인 이벤트 슬라이드</p>
+
 			</div>
 		</div>
 	</div>

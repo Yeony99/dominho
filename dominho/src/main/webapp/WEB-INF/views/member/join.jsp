@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
-<%@ page trimDirectiveWhitespaces="true" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <!DOCTYPE html>
 <html>
@@ -17,17 +17,55 @@
 <title>회원가입 - 도민호 피자</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <style type="text/css">
-
 .memberForm {
-	margin: 50px auto; width : 800px;
+	margin: 50px auto;
+	width: 500px;
 }
 
-.btn {
+.idbox {
+	border-bottom: 2px solid #adadad;
+	margin: 30px;
+	padding: 10px 10px;
+}
+
+.pwdbox {
+	border-bottom: 2px solid #adadad;
+	margin: 30px;
+	padding: 10px 10px;
+}
+
+.id {
+	width: 100%;
+	border: none;
+	outline: none;
+	color: #636e72;
+	font-size: 16px;
+	height: 25px;
+	background: none;
+}
+
+.pw {
+	width: 100%;
+	border: none;
+	outline: none;
+	color: #636e72;
+	font-size: 16px;
+	height: 25px;
+	background: none;
+}
+
+table {
+	width: 100%;
+	margin: 20px auto 0px;
+	border-spacing: 0px;
+}
+
+.joinbtn {
+	width:100%;
 	position: relative;
-	left: 40%;
+	left: 50%;
 	transform: translateX(-50%);
 	margin-bottom: 40px;
-	width: 80%;
 	height: 40px;
 	background: linear-gradient(125deg, #FCD6B8, #FF8E21, #CA3D2A);
 	background-position: left;
@@ -35,144 +73,126 @@
 	color: white;
 	font-weight: bold;
 	border: none;
-	border-radius: 20px; cursor : pointer;
+	border-radius: 20px;
+	cursor: pointer;
 	transition: 0.4s;
 	display: inline;
 	cursor: pointer;
+	margin: 40px 0;
 }
 
-.btn:hover {
+.joinbtn:hover {
 	background-position: right;
 }
 
-
+.btn {
+	display: block;
+    float: left;
+    position: relative;
+    left: 320px;
+    bottom: 28px;
+    border: none;
+    border-radius: 10px;
+    height: 30px;
+    width: 100px;
+}
 </style>
 <script type="text/javascript">
-function memberOk() {
-	var f = document.memberForm;
-	var str;
+	function memberOk() {
+		var f = document.memberForm;
+		var str;
 
-	str = f.userId.value;
-	str = str.trim();
-	if(!str) {
-		alert("아이디를 입력하세요. ");
-		f.userId.focus();
-		return;
+		str = f.userId.value;
+		str = str.trim();
+		if (!str) {
+			alert("아이디를 입력하세요. ");
+			f.userId.focus();
+			return;
+		}
+		if (!/^[a-z][a-z0-9_]{4,9}$/i.test(str)) {
+			alert("아이디는 5~10자이며 첫글자는 영문자이어야 합니다.");
+			f.userId.focus();
+			return;
+		}
+		f.userId.value = str;
+
+		str = f.userPwd.value;
+		str = str.trim();
+		if (!str) {
+			alert("패스워드를 입력하세요. ");
+			f.userPwd.focus();
+			return;
+		}
+		if (!/^(?=.*[a-z])(?=.*[!@#$%^*+=-]|.*[0-9]).{5,30}$/i.test(str)) {
+			alert("패스워드는 5~30자이며 하나 이상의 숫자나 특수문자가 포함되어야 합니다.");
+			f.userPwd.focus();
+			return;
+		}
+		f.userPwd.value = str;
+
+		if (str != f.userPwdCheck.value) {
+			alert("패스워드가 일치하지 않습니다. ");
+			f.userPwdCheck.focus();
+			return;
+		}
+
+		str = f.userName.value;
+		str = str.trim();
+		if (!str) {
+			alert("이름을 입력하세요. ");
+			f.userName.focus();
+			return;
+		}
+		f.userName.value = str;
+
+		str = f.birth.value;
+		str = str.trim();
+		if (!str || !isValidDateFormat(str)) {
+			alert("생년월일를 입력하세요[YYYY-MM-DD]. ");
+			f.birth.focus();
+			return;
+		}
+
+		str = f.tel.value;
+		str = str.trim();
+		if (!str) {
+			alert("전화번호를 입력하세요. ");
+			f.tel.focus();
+			return;
+		}
+
+		if (!/^(\d+)$/.test(str)) {
+			alert("숫자만 가능합니다. ");
+			f.tel.focus();
+			return;
+		}
+
+		str = f.email.value;
+		str = str.trim();
+		if (!str) {
+			alert("이메일을 입력하세요. ");
+			f.email1.focus();
+			return;
+		}
+
+		f.action = "${pageContext.request.contextPath}/member/${mode}_ok.do";
+		f.submit();
 	}
-	if(!/^[a-z][a-z0-9_]{4,9}$/i.test(str)) { 
-		alert("아이디는 5~10자이며 첫글자는 영문자이어야 합니다.");
-		f.userId.focus();
-		return;
+
+	function changeEmail() {
+		var f = document.memberForm;
+
+		var str = f.selectEmail.value;
+		if (str != "direct") {
+			f.email2.value = str;
+			f.email2.readOnly = true;
+			f.email1.focus();
+		} else {
+			f.email2.value = "";
+			f.email2.readOnly = false;
+			f.email1.focus();
+		}
 	}
-	f.userId.value = str;
-
-	str = f.userPwd.value;
-	str = str.trim();
-	if(!str) {
-		alert("패스워드를 입력하세요. ");
-		f.userPwd.focus();
-		return;
-	}
-	if(!/^(?=.*[a-z])(?=.*[!@#$%^*+=-]|.*[0-9]).{5,10}$/i.test(str)) { 
-		alert("패스워드는 5~10자이며 하나 이상의 숫자나 특수문자가 포함되어야 합니다.");
-		f.userPwd.focus();
-		return;
-	}
-	f.userPwd.value = str;
-
-	if(str!= f.userPwdCheck.value) {
-        alert("패스워드가 일치하지 않습니다. ");
-        f.userPwdCheck.focus();
-        return;
-	}
-	
-    str = f.userName.value;
-	str = str.trim();
-    if(!str) {
-        alert("이름을 입력하세요. ");
-        f.userName.focus();
-        return;
-    }
-    f.userName.value = str;
-
-    str = f.birth.value;
-	str = str.trim();
-    if(!str || !isValidDateFormat(str)) {
-        alert("생년월일를 입력하세요[YYYY-MM-DD]. ");
-        f.birth.focus();
-        return;
-    }
-    
-    str = f.tel1.value;
-	str = str.trim();
-    if(!str) {
-        alert("전화번호를 입력하세요. ");
-        f.tel1.focus();
-        return;
-    }
-
-    str = f.tel2.value;
-	str = str.trim();
-    if(!str) {
-        alert("전화번호를 입력하세요. ");
-        f.tel2.focus();
-        return;
-    }
-    if(!/^(\d+)$/.test(str)) {
-        alert("숫자만 가능합니다. ");
-        f.tel2.focus();
-        return;
-    }
-
-    str = f.tel3.value;
-	str = str.trim();
-    if(!str) {
-        alert("전화번호를 입력하세요. ");
-        f.tel3.focus();
-        return;
-    }
-    if(!/^(\d+)$/.test(str)) {
-        alert("숫자만 가능합니다. ");
-        f.tel3.focus();
-        return;
-    }
-    
-    str = f.email1.value;
-	str = str.trim();
-    if(!str) {
-        alert("이메일을 입력하세요. ");
-        f.email1.focus();
-        return;
-    }
-
-    str = f.email2.value;
-	str = str.trim();
-    if(!str) {
-        alert("이메일을 입력하세요. ");
-        f.email2.focus();
-        return;
-    }
-
-   	f.action = "${pageContext.request.contextPath}/member/${mode}_ok.do";
-    f.submit();
-}
-
-function changeEmail() {
-    var f = document.memberForm;
-	    
-    var str = f.selectEmail.value;
-    if(str!="direct") {
-        f.email2.value=str; 
-        f.email2.readOnly = true;
-        f.email1.focus(); 
-    }
-    else {
-        f.email2.value="";
-        f.email2.readOnly = false;
-        f.email1.focus();
-    }
-}
-
 </script>
 </head>
 <body>
@@ -180,10 +200,49 @@ function changeEmail() {
 		<jsp:include page="/WEB-INF/views/layout/header.jsp" />
 	</header>
 
-
-	<form name="memberForm" method="post" class ="memberForm">
-			  <table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px;">
-			  <tr>
+	<form name="memberForm" method="post" class="memberForm">
+		<h2 style="text-align: center;">회원가입</h2>
+		
+		<div class="idbox">
+		<h4>아이디</h4> <br>
+			<input type="text" name="userId" class="id" value="${dto.userId}" placeholder="아이디는 5~10자 사이로 입력해주세요.">
+		</div>
+		<div class="idbox">
+		<h4>이름</h4> <br>
+			<input type="text" name="userId" class="id" value="${dto.userName}" maxlength="30" placeholder="이름을 입력해주세요.">
+		</div>
+		<div class="pwdbox">
+		<h4>패스워드</h4> <br>
+			<input type="password" name="userPwd" class="pw" placeholder="패스워드 (5자 이상 + 영문 혹은 숫자)">
+		</div>
+		<div class="pwdbox">
+			<input type="password" name="userPwd" class="pw" placeholder="패스워드를 한 번 더 입력해주세요.">
+		</div>
+		<div class="idbox">
+		<h4>생일</h4> <br>
+			<input type="text" name="userId" class="id" value="${dto.birth}" placeholder="생일을 입력하세요. (2021-01-01)">
+		</div>
+		<div class="idbox">
+		<h4>휴대폰 번호</h4> <br>
+			<input type="text" name="userId" class="id" value="${dto.tel}" placeholder="휴대폰 번호를 입력해주세요.">
+		</div>
+		<div class="idbox">
+		<h4>주소</h4> <br>
+		<input type="text" name="zip" id="zip" value="${dto.zip}" class="id" readonly="readonly" placeholder="우편번호">
+			 <button type="button" class="btn" onclick="daumPostcode();">우편번호</button>
+		</div>
+		<div class="idbox">
+		<input type="text" name="addr1" id="addr1" value="${dto.addr1}" maxlength="50" class="id" placeholder="기본 주소" readonly="readonly">
+		</div>
+		<div class="idbox">
+		<input type="text" name="addr2" id="addr2" value="${dto.addr2}" maxlength="50" class="id"  placeholder="상세 주소를 입력해주세요.">
+	
+		</div>
+		<button type="button" class="joinbtn" onclick="memberOk();">회원가입</button>
+		
+		<table>
+			<!-- 
+			   <tr>
 			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
 			            <label style="font-weight: 900;">아이디</label>
 			      </td>
@@ -259,10 +318,10 @@ function changeEmail() {
 			        <p style="margin-top: 1px; margin-bottom: 5px;">
 			            <select name="selectEmail" onchange="changeEmail();" class="selectField">
 			                <option value="">선 택</option>
-			                <option value="naver.com" ${dto.email2=="naver.com" ? "selected='selected'" : ""}>네이버 메일</option>
-			                <option value="hanmail.net" ${dto.email2=="hanmail.net" ? "selected='selected'" : ""}>한 메일</option>
-			                <option value="hotmail.com" ${dto.email2=="hotmail.com" ? "selected='selected'" : ""}>핫 메일</option>
-			                <option value="gmail.com" ${dto.email2=="gmail.com" ? "selected='selected'" : ""}>지 메일</option>
+			                <option value="naver.com" ${dto.email2=="naver.com" ? "selected='selected'" : ""}>naver.com</option>
+			                <option value="hanmail.net" ${dto.email2=="kakao.com" ? "selected='selected'" : ""}>kakao.com</option>
+			                <option value="hotmail.com" ${dto.email2=="nate.com" ? "selected='selected'" : ""}>nate.com</option>
+			                <option value="gmail.com" ${dto.email2=="gmail.com" ? "selected='selected'" : ""}>gmail.com</option>
 			                <option value="direct">직접입력</option>
 			            </select>
 			            <input type="text" name="email1" value="${dto.email1}" size="13" maxlength="30"  class="boxTF">
@@ -287,10 +346,6 @@ function changeEmail() {
 			                <option value="018" ${dto.tel1=="018" ? "selected='selected'" : ""}>018</option>
 			                <option value="019" ${dto.tel1=="019" ? "selected='selected'" : ""}>019</option>
 			            </select>
-			            -
-			            <input type="text" name="tel2" value="${dto.tel2}" class="boxTF" maxlength="4">
-			            -
-			            <input type="text" name="tel3" value="${dto.tel3}" class="boxTF" maxlength="4">
 			        </p>
 			      </td>
 			  </tr>
@@ -343,16 +398,16 @@ function changeEmail() {
 			  <table style="width:100%; margin: 0px auto; border-spacing: 0px;">
 			     <tr height="45"> 
 			      <td align="center" >
-			        <button type="button" name="sendButton" class="btn" onclick="memberOk();">${mode=="member"?"회원가입":"정보수정"}</button>
+			        <button type="button" name="sendButton" class="joinbtn" onclick="memberOk();">${mode=="member"?"회원가입":"정보수정"}</button>
 			        <button type="reset" class="btn">다시입력</button>
 			        <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/';">${mode=="member"?"가입취소":"수정취소"}</button>
 			      </td>
 			    </tr>
 			    <tr height="30">
 			        <td align="center" style="color: blue;">${message}</td>
-			    </tr>
-			  </table>
-			</form>
+			    </tr> -->
+		</table>
+	</form>
 
 
 	<footer>

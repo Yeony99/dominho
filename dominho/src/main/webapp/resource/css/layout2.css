@@ -30,6 +30,7 @@ body {
 }
 
 .menu {
+	width:1200px;
 	font-size:20px;
 	height:50px;
 	margin: 25px 25px 0 25px;
@@ -37,6 +38,7 @@ body {
 
 .menu .nav .un {
 	width: 50px;
+	position: relative;
 }
 
 ul.nav > li {
@@ -66,10 +68,11 @@ ul.nav>li >ul.submenu:hover {
 }
 
 #container {
-	margin: 0 auto;
+	width: 100%;
+}
+.main-container {
 	background:#505050; /*구분 편의하게 넣어놓은 것입니다...*/
-	width: 80%;
-	min-height: 800px;
+	height: 500px;
 }
 
 .main-content {
