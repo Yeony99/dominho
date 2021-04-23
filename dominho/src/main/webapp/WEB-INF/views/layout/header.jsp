@@ -12,7 +12,7 @@
 		</p>
 	</div>
 	<div class="header-right">
-		<div style="padding-top: 20px; float: right;">
+		<div style="padding-top: 20px;" class="sessions">
 			<c:if test="${empty sessionScope.member}">
 				<a href="${pageContext.request.contextPath}/order/cart.do " style="margin-right: 10px; visibility: hidden;">
 					<img alt="" src="${pageContext.request.contextPath}/resource/images/carts.png" style="width: 30px; height: 30px;">
