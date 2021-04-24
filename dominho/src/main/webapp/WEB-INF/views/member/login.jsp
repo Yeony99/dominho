@@ -138,7 +138,7 @@ function sendLogin() {
 			</div>
 			<button type="button" class="btn" onclick="sendLogin();">로그인</button>
 			<div class="bottomText">
-				회원이 아니신가요? <a href="${pageContext.request.contextPath}/">회원가입</a><br> 
+				회원이 아니신가요? <a href="${pageContext.request.contextPath}/member/member.do">회원가입</a><br> 
 				<a href="${pageContext.request.contextPath}/">비밀번호 찾기</a>&nbsp;&nbsp;&nbsp;<a href="${pageContext.request.contextPath}/">아이디 찾기</a>
 			</div>
 
