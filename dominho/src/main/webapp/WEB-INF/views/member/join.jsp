@@ -24,6 +24,8 @@
 
 .box {
 	border-bottom: 2px solid #adadad;
+}
+.msgBox, .box {
 	margin: 30px;
 	padding: 10px 10px;
 }
@@ -219,6 +221,7 @@ function isValidDateFormat(data){
 		
 		f.action = "${pageContext.request.contextPath}/member/${mode}_ok.do";
 		f.submit();
+		alert("가입되었습니다. 로그인해주세요.");
 	}
 
 	function changeEmail() {
@@ -359,7 +362,9 @@ function isValidDateFormat(data){
 					<button type="button" class="popbtn" onclick="closePopup();" style="left:400px">닫기</button>
 				</div>
 			</div>
-		
+		<div class="msgBox" style="color: #CA3D2A ">
+			${msg}
+		</div>
 		<button type="button" class="joinbtn" onclick="memberOk();">회원가입</button>
 	</form>
 	<footer>

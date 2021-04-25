@@ -17,7 +17,7 @@ public class MemberDAO {
 		String sql = "";
 
 		try {
-			sql = "SELECT userid, userpwd, username, tel, TO_CHAR(birth, 'YYYY-MM-DD') birth, address1, address2, TO_CHAR(joinedDate, 'YYYY-MM-DD') joinedDate, gender FROM member WHERE userid = ?";
+			sql = "SELECT userid, userpwd, username, email, TO_CHAR(birth, 'YYYY-MM-DD') birth, tel, zip, address1, address2, TO_CHAR(joinedDate, 'YYYY-MM-DD') joinedDate FROM member WHERE userid = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, userId);
 			rs = pstmt.executeQuery();
@@ -27,14 +27,14 @@ public class MemberDAO {
 				dto.setUserId(rs.getString("userId"));
 				dto.setUserPwd(rs.getString("userPwd"));
 				dto.setUserName(rs.getString("userName"));
-//				dto.setEmail(rs.getString("email"));
-				dto.setTel(rs.getString("tel"));
+				dto.setEmail(rs.getString("email"));
 				dto.setBirth(rs.getString("birth"));
+				dto.setTel(rs.getString("tel"));
+				dto.setZip(rs.getString("zip"));
 				dto.setAddr1(rs.getString("address1"));
 				dto.setAddr2(rs.getString("address2"));
 				dto.setJoinedDate(rs.getString("joinedDate"));
-				dto.setGender(rs.getString("gender"));
-				// dto.setEnabled(rs.getInt("enabled"));
+				
 
 			}
 		} catch (SQLException e) {
@@ -65,17 +65,19 @@ public class MemberDAO {
 		try {
 			conn.setAutoCommit(false);
 
-			sql = "INSET INTO member(id, pwd, name, tel, birth, address1, address2, joinedDate, gender) VALUES (?, ?, ?, ?, ?, ?, ?, SYSDATE, ?)";
+			sql = "INSERT INTO member(userid, userpwd, username, email, birth, tel, zip, address1, address2, joinedDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, SYSDATE)";
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setString(1, dto.getUserId());
 			pstmt.setString(2, dto.getUserPwd());
 			pstmt.setString(3, dto.getUserName());
-			pstmt.setString(4, dto.getTel());
-			pstmt.setString(5, dto.getAddr1());
-			pstmt.setString(6, dto.getAddr2());
-			pstmt.setString(7, dto.getGender());
-
+			pstmt.setString(4, dto.getEmail());
+			pstmt.setString(5, dto.getBirth());
+			pstmt.setString(6, dto.getTel());
+			pstmt.setString(7, dto.getZip());
+			pstmt.setString(8, dto.getAddr1());
+			pstmt.setString(9, dto.getAddr2());
+			
 			result += pstmt.executeUpdate();
 			conn.commit();
 

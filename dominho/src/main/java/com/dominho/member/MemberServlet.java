@@ -1,6 +1,7 @@
 package com.dominho.member;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -70,11 +71,7 @@ public class MemberServlet extends MyServlet {
 				resp.sendRedirect(cp);
 				return;
 			}
-		}
-		//아이디 또는 패스워드가 잘못 된 경우 다시 로그인 폼으로
-//		String msg = "아이디 또는 패스워드가 일치하지 않습니다.";
-//		req.setAttribute("message", msg);
-//		
+		}	
 		forward(req, resp, "/WEB-INF/views/member/login.jsp");
 	}
 
@@ -96,7 +93,42 @@ public class MemberServlet extends MyServlet {
 	}
 
 	private void memberSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+		MemberDAO dao = new MemberDAO();
+		String msg ="";
+		
+		try {
+			MemberDTO dto = new MemberDTO();
+			dto.setUserId(req.getParameter("userId"));
+			dto.setUserPwd(req.getParameter("userPwd"));
+			dto.setUserName(req.getParameter("userName"));
+			dto.setEmail(req.getParameter("userEmail"));
+			String birth=req.getParameter("birth").replaceAll("(\\.|\\-|\\/)", "");
+			dto.setBirth(birth);
+			dto.setTel(req.getParameter("tel"));
+			dto.setZip(req.getParameter("zip"));
+			dto.setAddr1(req.getParameter("address1"));
+			dto.setAddr2(req.getParameter("address2"));
+			
+			dao.insertMember(dto);
+			String cp = req.getContextPath();
+			resp.sendRedirect(cp);
+			return;
+			
+		} catch (SQLException e) {
+			if(e.getErrorCode()==1)
+				msg = "이미 가입된 아이디입니다.";
+			else if(e.getErrorCode()==1400)
+				msg = "필수 사항을 입력하지 않았습니다.";
+			else if(e.getErrorCode()==1861)
+				msg = "날짜 형식이 일치하지 않습니다.";
+			else
+				msg = "회원 가입에 실패하였습니다.";
+		} catch (Exception e) {
+			msg = "회원 가입에 실패하였습니다.";
+			e.printStackTrace();
+		}
+		req.setAttribute("msg", msg);
+		forward(req, resp, "/WEB-INF/views/member/join.jsp");
 	}
 
 	private void pwdForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
