@@ -20,18 +20,95 @@
 	height: 25px;
 	background: none;
 }
+
 .btn {
 	display: block;
 	float: left;
 	position: relative;
 	left: 170px;
-	bottom:60px;
-	border: none;
+	bottom: 60px; border : none;
 	border-radius: 10px;
 	height: 30px;
 	width: 100px;
+	border: none;
 }
 
+.loginForm {
+	margin: 50px auto; width : 300px;
+	height: 500px;
+	padding: 30px, 20px;
+	background-color: #FFFFFF;
+	text-align: center;
+	top: 50%;
+	border-radius: 15px;
+	width: 300px;
+}
+
+.loginForm h2 {
+	text-align: center;
+	margin: 30px;
+}
+
+.idbox {
+	border-bottom: 2px solid #adadad;
+	margin: 30px;
+	padding: 10px 10px;
+}
+
+.pwdbox {
+	border-bottom: 2px solid #adadad;
+	margin: 30px;
+	padding: 10px 10px;
+}
+
+.id {
+	width: 100%;
+	border: none;
+	outline: none;
+	color: black;
+	font-size: 16px;
+	height: 25px;
+	background: none;
+}
+
+.pw {
+	width: 100%;
+	border: none;
+	outline: none;
+	color: #636e72;
+	font-size: 16px;
+	height: 25px;
+	background: none;
+}
+
+.msgBox, .box {
+	margin: 30px;
+	padding: 10px 10px;
+}
+
+.btn {
+	position: relative;
+	left: 50%;
+	top:5%;
+	transform: translateX(-50%);
+	margin-bottom: 40px;
+	width: 80%;
+	height: 40px;
+	background: linear-gradient(125deg, #FCD6B8, #FF8E21, #CA3D2A);
+	background-position: left;
+	background-size: 200%;
+	color: white;
+	font-weight: bold;
+	border: none;
+	border-radius: 20px; cursor : pointer;
+	transition: 0.4s;
+	display: inline;
+	cursor: pointer;
+}
+
+.btn:hover {
+	background-position: right;
+}
 </style>
 <script type="text/javascript">
 	function sendConfirm() {
@@ -60,32 +137,30 @@
 			<li><span class="un"><a href="#">쿠폰함</a></span></li>-->
 		</ul>
 	</div>
-	<div class="myPageBox">
-		<div style="padding: 30px 30px;">
-			<div
-				style="border-bottom: 2px solid #CA3D2A; display: inline-block; position: relative;">
-				<c:if test="${mode eq 'myOrderList'}">
+	<c:if test="${mode eq 'myOrderList'}">
+		<div class="myPageBox">
+			<div style="padding: 30px 30px;">
+				<div
+					style="border-bottom: 2px solid #CA3D2A; display: inline-block; position: relative;">
 					<h3>${sessionScope.member.userName}님의&nbsp;주문내역입니다.</h3>
-				</c:if>
-				<c:if test="${mode eq 'update'}">
-					<h3>본인여부&nbsp;확인</h3>
-				</c:if>
+
+				</div>
 			</div>
 		</div>
-	</div>
-		<c:if test="${mode eq 'update'}">
-			<form name="confirm" method="post" style="margin:30px 10px;">
-				<div>
-					<div class="box">
-					<h4>아이디 : ${sessionScope.member.userId}</h4>
-					</div>
-					<div class="box">
-					<h4>비밀번호 확인</h4><input type="password" name="userPwd" class="inputStyle"
-							placeholder="패스워드 입력">
-					</div>
-					<button type="button" class="btn" onclick="sendConfirm();">확인</button>
-					${msg}
-				</div>
-			</form>
-		</c:if>
+	</c:if>
+	<c:if test="${mode eq 'update'}">
+		<form name="confirm" method="post" class="loginForm" action="">
+			<h2>본인여부 확인</h2>
+			<div class="idbox">
+				<input type="text" name="userId" class="id"
+					value="${sessionScope.member.userId}">
+			</div>
+			<div class="pwdbox">
+				<input type="password" name="userPwd" class="pw"
+					placeholder="비밀번호를 입력해주세요.">
+			</div>
+			<button type="button" class="btn" onclick="sendConfirm();">비밀번호 확인</button>
+			<div class="msgBox" style="color: #CA3D2A">${msg}</div>
+		</form>
+	</c:if>
 </div>

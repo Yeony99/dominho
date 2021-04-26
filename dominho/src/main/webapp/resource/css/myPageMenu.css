@@ -9,12 +9,16 @@
 	justify-content: flex-start;
 }
 
+h2 {
+	margin: 5px 10px;
+}
+
 .myPageNav>li {
 	float: left;
 	text-align:center;
 	position: relative;
-	width: 100px;
-	margin:15px 0;
+	width: 80px;
+	margin: 5px 0;
 	list-style: none;
 }
 
@@ -36,7 +40,7 @@
 }
 
 .myPageBox {
-	background: #ff8E21;
+	background: #0E191A;
 	width: 1000px;
 	color: white;
 	border-radius: 15px;
