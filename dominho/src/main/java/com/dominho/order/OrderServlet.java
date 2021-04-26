@@ -1,6 +1,7 @@
 package com.dominho.order;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -56,11 +57,34 @@ public class OrderServlet extends MyServlet {
 	}
 
 	private void cartDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String path = "/WEB-INF/views/order/cart.jsp";
-		forward(req, resp, path);
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		OrderDAO dao=new OrderDAO();
+		try {
+			dao.deleteCart(Integer.parseInt(req.getParameter("num")), info.getUserId());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		String cp=req.getContextPath();
+		resp.sendRedirect(cp+"/order/cart.do");
+		
 	}
 
 	private void cartList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		OrderDAO dao=new OrderDAO();
+		List<CartDTO> list=null;
+		list=dao.listBoard(info.getUserId());
+		
+		int dataCount;
+		dataCount = dao.dataCount(info.getUserId());
+		 
+		req.setAttribute("cartlist", list);
+		req.setAttribute("dataCount", dataCount);
+
 		String path = "/WEB-INF/views/order/cart.jsp";
 		forward(req, resp, path);
 	}

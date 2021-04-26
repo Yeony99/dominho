@@ -8,11 +8,12 @@ public class CartDTO {
 	private int quantity;
 	private String created;
 	private int price;
-	public int getCardId() {
+	
+	public int getCartId() {
 		return cartId;
 	}
-	public void setCardId(int cardId) {
-		this.cartId = cardId;
+	public void setCartId(int cartId) {
+		this.cartId = cartId;
 	}
 	public int getMenuNum() { 
 		return menuNum;

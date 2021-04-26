@@ -34,7 +34,8 @@
 				<span style="color: blue;">${sessionScope.member.userName}</span>님
                     &nbsp;|&nbsp;
                    <a href="${pageContext.request.contextPath}/member/logout.do">로그아웃</a>
-
+                    &nbsp;|&nbsp;
+                   <a href="${pageContext.request.contextPath}/member/mypage.do">마이페이지</a>
 			</c:if>
 		</div>
 	</div>
