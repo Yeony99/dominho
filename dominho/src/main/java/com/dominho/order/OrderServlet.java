@@ -1,6 +1,7 @@
 package com.dominho.order;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,25 +14,26 @@ import javax.servlet.http.HttpSession;
 import com.dominho.member.SessionInfo;
 import com.dominho.menu.MenuDAO;
 import com.dominho.menu.MenuDTO;
+import com.dominho.store.StoreDTO;
 import com.util.MyServlet;
 
 @WebServlet("/order/*")
 public class OrderServlet extends MyServlet {
 	private static final long serialVersionUID = 1L;
- 
+
 	@Override
 	protected void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
 
 		String uri = req.getRequestURI();
 		// 로그인이 되지 않은 상태이면 로그인 페이지로
-				HttpSession session = req.getSession();
-				SessionInfo info = (SessionInfo) session.getAttribute("member");
-				if (info == null) {
-					String cp = req.getContextPath();
-					resp.sendRedirect(cp + "/member/login.do");
-					return;
-				}
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		if (info == null) {
+			String cp = req.getContextPath();
+			resp.sendRedirect(cp + "/member/login.do");
+			return;
+		}
 		if (uri.indexOf("order_ok.do") != -1) {
 			orderSubmit(req, resp);
 		} else if (uri.indexOf("order.do") != -1) {
@@ -46,70 +48,104 @@ public class OrderServlet extends MyServlet {
 	}
 
 	private void orderSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//		
-//		
-//		dao.readMenu(0)
-//		HttpSession session = req.getSession();
-//		SessionInfo info = (SessionInfo) session.getAttribute("member");
-//		int storeNum=Integer.parseInt(req.getParameter("store"));
-//		String isDelivery=req.getParameter(req.getParameter("customRadioInline1"));
-//		int totalPrice=Integer.parseInt(req.getParameter("))
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		OrderDAO mdao = new OrderDAO();
+		double totalPrice = 0;
+		String creditCard = req.getParameter("cardNum");
+		String isDelivery = req.getParameter("customRadioInline1");
+		int storeNum;
+		if (isDelivery == "배달") {
+			storeNum = Integer.parseInt(req.getParameter("store2"));
+			totalPrice = Integer.parseInt(req.getParameter("totalPrice"));
+		} else {
+			storeNum = Integer.parseInt(req.getParameter("store1"));
+			totalPrice = Integer.parseInt(req.getParameter("totalPrice"))*0.8;
+
+		}
+
+		// 주문 생성
+		try {
+			mdao.insertOrder(info.getUserId(), storeNum, isDelivery, totalPrice, creditCard);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		// 주문상세
+		String[] menus = req.getParameterValues("menus");
+		for (String m : menus) {
+			try {
+				mdao.insertOrderDetail(Integer.parseInt(m.split(",")[0]), Integer.parseInt(m.split(",")[2]),
+						Integer.parseInt(m.split(",")[1]));
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		//모든 주문 다 보여주기 시간순으로
+		List<AllOrderInfoDTO> myorders=mdao.allMyOrder();
+		req.setAttribute("AllOrders", myorders);
+		
+		String path = "/WEB-INF/views/order/orderResult.jsp";
+		forward(req, resp, path);
 	}
 
 	private void order(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<CartDTO> list=new ArrayList<CartDTO>();
-		MenuDAO dao=new MenuDAO();
-		String [] checkedMenu=req.getParameterValues("cbox");
-		int totalPrice=0;
-		for(String m:checkedMenu) {
-			CartDTO cart=new CartDTO();
+		List<CartDTO> list = new ArrayList<CartDTO>();
+		MenuDAO dao = new MenuDAO();
+		OrderDAO mdao = new OrderDAO();
+		String[] checkedMenu = req.getParameterValues("cbox");
+		int totalPrice = 0;
+		for (String m : checkedMenu) {
+			CartDTO cart = new CartDTO();
 			cart.setMenuNum(Integer.parseInt(m.split(",")[1]));
 			cart.setQuantity(Integer.parseInt(m.split(",")[2]));
-			MenuDTO menu=dao.readMenu(Integer.parseInt(m.split(",")[1]));
+			MenuDTO menu = dao.readMenu(Integer.parseInt(m.split(",")[1]));
 			cart.setMenuName(menu.getMenuName());
-			cart.setPrice(menu.getMenuPrice()*Integer.parseInt(m.split(",")[2]));
+			cart.setPrice(menu.getMenuPrice() * Integer.parseInt(m.split(",")[2]));
 			list.add(cart);
-			totalPrice+=menu.getMenuPrice()*Integer.parseInt(m.split(",")[2]);
+			totalPrice += menu.getMenuPrice() * Integer.parseInt(m.split(",")[2]);
 		}
+		List<StoreDTO> allList = mdao.allStore();
+
 		req.setAttribute("cartlist", list);
 		req.setAttribute("totalPrice", totalPrice);
+		req.setAttribute("allstorelist", allList);
 
-		
-		
 		String path = "/WEB-INF/views/order/order.jsp";
 		forward(req, resp, path);
 	}
 
 	private void cartAdd(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-	
+
 	}
 
 	private void cartDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		OrderDAO dao=new OrderDAO();
+		OrderDAO dao = new OrderDAO();
 		try {
 			dao.deleteCart(Integer.parseInt(req.getParameter("num")), info.getUserId());
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		String cp=req.getContextPath();
-		resp.sendRedirect(cp+"/order/cart.do");
-		
+
+		String cp = req.getContextPath();
+		resp.sendRedirect(cp + "/order/cart.do");
+
 	}
 
 	private void cartList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		OrderDAO dao=new OrderDAO();
-		List<CartDTO> list=null;
-		list=dao.listBoard(info.getUserId());
-		
+		OrderDAO dao = new OrderDAO();
+		List<CartDTO> list = null;
+		list = dao.listBoard(info.getUserId());
+
 		int dataCount;
 		dataCount = dao.dataCount(info.getUserId());
-		 
+
 		req.setAttribute("cartlist", list);
 		req.setAttribute("dataCount", dataCount);
 

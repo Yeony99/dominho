@@ -11,5 +11,21 @@
 </head>
 <body>
 주문완료
+<c:forEach var="order" items="${AllOrders}">
+<div style="border: 3px solid #FF8E21; border-radius: 10px;">
+${order.orderNum}
+${order.userId}
+${order.storeName}
+${order.orderDate}
+${order.isDelivery}
+${order.totalPrice}
+${order.cardNum}
+${order.menuName}
+${order.orderCount}
+${order.orderPrice}
+</div>
+</c:forEach>
+
+
 </body>
 </html>

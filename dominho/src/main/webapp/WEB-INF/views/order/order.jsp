@@ -15,6 +15,9 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/layout2.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style2.css" type="text/css">
 <script type="text/javascript">
+$(document).ready(function() {
+	discount();
+})
 	function daumPostcode() {
 		new daum.Postcode(
 				{
@@ -51,8 +54,8 @@
 					}
 				}).open();
 	}
-	function check(){
-		var f=document.orderForm
+	function check() {
+		var f = document.orderForm
 		var str;
 		str = f.tel.value;
 		str = str.trim();
@@ -66,42 +69,67 @@
 			f.tel.focus();
 			return false;
 		}
-		
-		str=f.zip.value;
-		str=str.trim();
-		if (!str) {
-			alert("우편번호를 입력하세요. ");
-			f.tel.focus();
-			return false;
+
+		var radioVal = $('input[name="customRadioInline1"]:checked').val();
+		if (radioVal == '배달') {
+			str = f.zip.value;
+			str = str.trim();
+			if (!str) {
+				alert("우편번호를 입력하세요. ");
+				f.tel.focus();
+				return false;
+			}
+			str = f.addr1.value;
+			str = str.trim();
+			if (!str) {
+				alert("기본주소를 입력하세요. ");
+				f.tel.focus();
+				return false;
+			}
+			str = f.addr2.value;
+			str = str.trim();
+			if (!str) {
+				alert("상세주소를 입력하세요. ");
+				f.tel.focus();
+				return false;
+			}
+			str = f.store2.value;
+			if (!str) {
+				alert("매장을 선택하세요 ");
+				f.tel.focus();
+				return false;
+			}
 		}
-		str=f.addr1.value;
-		str=str.trim();
-		if (!str) {
-			alert("기본주소를 입력하세요. ");
-			f.tel.focus();
-			return false;
+
+		str = f.store1.value;
+		if (radioVal == '포장') {
+			if (!str) {
+				alert("매장을 선택하세요 ");
+				f.tel.focus();
+				return false;
+			}
 		}
-		str=f.addr2.value;
-		str=str.trim();
-		if (!str) {
-			alert("상세주소를 입력하세요. ");
-			f.tel.focus();
-			return false;
+		var radioVal = $('input[name="customRadioInline2"]:checked').val();
+		if (radioVal == '카드결제') {
+			str = f.cardNum.value;
+			if (!str) {
+				alert("카드 번호를 입력하세요");
+				f.tel.focus();
+				return false;
+			}
+
 		}
-		str=f.store.value;
-		if (!str) {
-			alert("매장을 선택하세요 ");
-			f.tel.focus();
-			return false;
-		}
-		
-		str=f.cardNum.value;
-		if (!str) {
-			alert("카드 번호를 입력하세요");
-			f.tel.focus();
-			return false;
-		}
+
 		return true;
+	}
+	function discount() {
+		var radioVal = $('input[name="customRadioInline1"]:checked').val();
+		if (radioVal == '배달') {
+			$(".price").html("결제: "+${totalPrice}+"원")
+		}else{
+			$(".price").html("결제: "+${totalPrice*0.8}+"원(포장할인 20%적용" +${totalPrice*0.2}+"원 할인)");
+			
+		}
 	}
 </script>
 <style type="text/css">
@@ -119,21 +147,24 @@ main {
 		<h3>주문</h3>
 		<br>
 		<h4>주문 메뉴 정보</h4>
+		
 		<form name="orderForm" action="${pageContext.request.contextPath}/order/order_ok.do" method="post" onsubmit="return check();">
 			<c:forEach var="dto" items="${cartlist}">
-				<div class="box" style="border: 3px solid #FF8E21; 	border-radius: 10px;">
+				<input type="hidden" name="menus" value="${dto.menuNum},${dto.quantity},${dto.price}">
+				<div class="box" style="border: 3px solid #FF8E21; border-radius: 10px;">
 					<img src="${pageContext.request.contextPath}/resource/images/dominho_logo.svg" alt="Card image cap" width="130px" height="130px">
 					<p>${dto.menuName}×${dto.quantity}</p>
 					<p>총 ${dto.price}원</p>
 				</div>
 			</c:forEach>
+			<input type="hidden" value="${cartlist}">
 			<div class="box">
 				<div class="custom-control custom-radio custom-control-inline">
-					<input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input" value="배달" checked="checked">
+					<input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input" value="배달" checked="checked" onclick="discount()">
 					<label class="custom-control-label" for="customRadioInline1">배달</label>
 				</div>
 				<div class="custom-control custom-radio custom-control-inline">
-					<input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" value="포장">
+					<input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" value="포장" onclick="discount()">
 					<label class="custom-control-label" for="customRadioInline2">포장</label>
 				</div>
 			</div>
@@ -146,7 +177,7 @@ main {
 			<div id="forWrap" style="display: none;">
 				<div class="box">
 					<h4>포장매장</h4>
-					<select name="store"  class="custom-select custom-select-lg mb-3">
+					<select name="store1" class="custom-select custom-select-lg mb-3">
 						<option selected>포장 매장 선택</option>
 						<c:forEach var="store" items="${allstorelist}">
 							<option value="${store.storeNum}">${store.storeName}(${store.storeAddress})</option>
@@ -170,7 +201,7 @@ main {
 				<br>
 				<div class="box">
 					<h4>배달매장</h4>
-					<select name="store" class="custom-select custom-select-lg mb-3">
+					<select name="store2" class="custom-select custom-select-lg mb-3">
 						<option selected>배달 매장 선택</option>
 						<c:forEach var="store" items="${storelist}">
 							<option value="${store.storeNum}">${store.storeName}(${store.storeAddress})</option>
@@ -197,7 +228,8 @@ main {
 				</div>
 			</div>
 			<div class="prices">
-				<input readonly="readonly" value="${totalPrice}" placeholder="결제금액:${totalPrice}"> 
+				<input type="hidden" value="${totalPrice}" name="totalPrice">
+				<div class="price" ></div>
 				<button type="submit" class="btn btn-danger btn-lg">주문완료하기</button>
 			</div>
 		</form>
