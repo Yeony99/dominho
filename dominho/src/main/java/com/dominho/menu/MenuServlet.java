@@ -149,7 +149,6 @@ public class MenuServlet extends MyUploadServlet {
 			dto.setMenuPrice(Integer.parseInt(req.getParameter("menuPrice")));
 			dto.setImageFilename(req.getParameter("imageFilename"));
 			dto.setMenuType(req.getParameter("menuYType"));
-			dto.setMenuCount(Integer.parseInt(req.getParameter("menuCount")));
 			dto.setUserId(info.getUserId());
 			
 			String filename = null;
@@ -251,7 +250,6 @@ public class MenuServlet extends MyUploadServlet {
 			dto.setMenuExplain(req.getParameter("menuExplain"));
 			dto.setMenuPrice(Integer.parseInt(req.getParameter("menuPrice")));
 			dto.setMenuType(req.getParameter("menuYType"));
-			dto.setMenuCount(Integer.parseInt(req.getParameter("menuCount")));
 			String imageFilename = req.getParameter("imageFilename");
 			Part p = req.getPart("selectFile");
 			Map<String, String> map = doFileUpload(p, pathname);
