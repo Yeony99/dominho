@@ -1,0 +1,47 @@
+@charset "UTF-8";
+
+.myPageMenu {
+	width: 1200px;
+	font-size: 15px;
+	height: 50px;
+	margin: 0;
+	display: flex;
+	justify-content: flex-start;
+}
+
+.myPageNav>li {
+	float: left;
+	text-align:center;
+	position: relative;
+	width: 100px;
+	margin:15px 0;
+	list-style: none;
+}
+
+.myPageNav>li a, .myPageNav>li a:after {
+	text-decoration: none;
+	color: gray;
+}
+.un::after {
+  content: '';
+  width: 0px;
+  height: 1px;
+  display: block;
+  background:  #0E191A;
+  transition: 300ms;
+}
+
+.un:hover::after {
+  width: 100%;
+}
+
+.myPageBox {
+	background: #ff8E21;
+	width: 1000px;
+	color: white;
+	border-radius: 15px;
+}
+
+.active {
+	color: #0E191A;
+}
