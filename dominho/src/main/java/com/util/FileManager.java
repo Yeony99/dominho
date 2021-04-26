@@ -111,6 +111,7 @@ public class FileManager {
 		return doFiledelete(path);
 	}
 
+	
 	/**
 	 * 파일 삭제
 	 * @param pathname 파일이 저장된 경로 및 삭제할 파일명
