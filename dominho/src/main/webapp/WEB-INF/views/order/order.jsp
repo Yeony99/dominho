@@ -1,15 +1,236 @@
-<%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page trimDirectiveWhitespaces="true" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Dominho Pizza | 주문하기</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/layout2.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style2.css" type="text/css">
+<script type="text/javascript">
+	function daumPostcode() {
+		new daum.Postcode(
+				{
+					oncomplete : function(data) {
+						var fullAddr = '';
+						var extraAddr = '';
+
+						if (data.userSelectedType === 'R') { //도로명 주소
+							fullAddr = data.roadAddress;
+
+						} else { //지번 주소
+							fullAddr = data.jibunAddress;
+						}
+
+						if (data.userSelectedType === 'R') {
+							//법정동명이 있을 경우 추가한다.
+							if (data.bname !== '') {
+								extraAddr += data.bname;
+							}
+							// 건물명이 있을 경우 추가한다.
+							if (data.buildingName !== '') {
+								extraAddr += (extraAddr !== '' ? ', '
+										+ data.buildingName : data.buildingName);
+							}
+							// 조합형주소의 유무에 따라 양쪽에 괄호를 추가하여 최종 주소를 만든다.
+							fullAddr += (extraAddr !== '' ? ' (' + extraAddr
+									+ ')' : '');
+						}
+						// 우편번호와 주소 정보를 해당 필드에 넣는다.
+						document.getElementById('zip').value = data.zonecode; //5자리 새우편번호 사용
+						document.getElementById('addr1').value = fullAddr;
+						// 커서를 상세주소 필드로 이동한다.
+						document.getElementById('addr2').focus();
+					}
+				}).open();
+	}
+	function check(){
+		var f=document.orderForm
+		var str;
+		str = f.tel.value;
+		str = str.trim();
+		if (!str) {
+			alert("전화번호를 입력하세요. ");
+			f.tel.focus();
+			return false;
+		}
+		if (!/^(\d+)$/.test(str)) {
+			alert("전화번호는 숫자만 가능합니다. ");
+			f.tel.focus();
+			return false;
+		}
+		
+		str=f.zip.value;
+		str=str.trim();
+		if (!str) {
+			alert("우편번호를 입력하세요. ");
+			f.tel.focus();
+			return false;
+		}
+		str=f.addr1.value;
+		str=str.trim();
+		if (!str) {
+			alert("기본주소를 입력하세요. ");
+			f.tel.focus();
+			return false;
+		}
+		str=f.addr2.value;
+		str=str.trim();
+		if (!str) {
+			alert("상세주소를 입력하세요. ");
+			f.tel.focus();
+			return false;
+		}
+		str=f.store.value;
+		if (!str) {
+			alert("매장을 선택하세요 ");
+			f.tel.focus();
+			return false;
+		}
+		
+		str=f.cardNum.value;
+		if (!str) {
+			alert("카드 번호를 입력하세요");
+			f.tel.focus();
+			return false;
+		}
+		return true;
+	}
+</script>
+<style type="text/css">
+main {
+	width: 80%;
+	margin: 0 auto;
+}
+</style>
 </head>
 <body>
-주문
+	<header id="header">
+		<jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
+	</header>
+	<main>
+		<h3>주문</h3>
+		<br>
+		<h4>주문 메뉴 정보</h4>
+		<form name="orderForm" action="${pageContext.request.contextPath}/order/order_ok.do" method="post" onsubmit="return check();">
+			<c:forEach var="dto" items="${cartlist}">
+				<div class="box" style="border: 3px solid #FF8E21; 	border-radius: 10px;">
+					<img src="${pageContext.request.contextPath}/resource/images/dominho_logo.svg" alt="Card image cap" width="130px" height="130px">
+					<p>${dto.menuName}×${dto.quantity}</p>
+					<p>총 ${dto.price}원</p>
+				</div>
+			</c:forEach>
+			<div class="box">
+				<div class="custom-control custom-radio custom-control-inline">
+					<input type="radio" id="customRadioInline1" name="customRadioInline1" class="custom-control-input" value="배달" checked="checked">
+					<label class="custom-control-label" for="customRadioInline1">배달</label>
+				</div>
+				<div class="custom-control custom-radio custom-control-inline">
+					<input type="radio" id="customRadioInline2" name="customRadioInline1" class="custom-control-input" value="포장">
+					<label class="custom-control-label" for="customRadioInline2">포장</label>
+				</div>
+			</div>
+			<br>
+			<div class="box">
+				<h4>연락처</h4>
+				<input class="form-control" type="text" name="tel" class="inputStyle" placeholder="핸드폰 번호를 숫자만 입력해주세요.">
+			</div>
+			<br>
+			<div id="forWrap" style="display: none;">
+				<div class="box">
+					<h4>포장매장</h4>
+					<select name="store"  class="custom-select custom-select-lg mb-3">
+						<option selected>포장 매장 선택</option>
+						<c:forEach var="store" items="${allstorelist}">
+							<option value="${store.storeNum}">${store.storeName}(${store.storeAddress})</option>
+						</c:forEach>
+					</select>
+				</div>
+			</div>
+
+			<div id="forDelivery">
+				<div class="box">
+					<h4>배달주소</h4>
+					<button type="button" class="btn" onclick="daumPostcode();">우편번호</button>
+					<input class="form-control" type="text" name="zip" id="zip" class="inputStyle" readonly="readonly" placeholder="우편번호">
+				</div>
+				<div class="box">
+					<input class="form-control" type="text" name="addr1" id="addr1" maxlength="50" class="inputStyle" placeholder="기본 주소" readonly="readonly">
+				</div>
+				<div class="box">
+					<input class="form-control" type="text" name="addr2" id="addr2" maxlength="50" class="inputStyle" placeholder="상세 주소를 입력해주세요.">
+				</div>
+				<br>
+				<div class="box">
+					<h4>배달매장</h4>
+					<select name="store" class="custom-select custom-select-lg mb-3">
+						<option selected>배달 매장 선택</option>
+						<c:forEach var="store" items="${storelist}">
+							<option value="${store.storeNum}">${store.storeName}(${store.storeAddress})</option>
+						</c:forEach>
+					</select>
+				</div>
+			</div>
+			<br>
+			<div class="box">
+				<h4>요청사항</h4>
+				<input class="form-control" type="text" name="userName" class="inputStyle" value="${dto.userName}" maxlength="100" placeholder="요청사항을 입력해주세요.">
+			</div>
+			<br>
+			<div class="box">
+				<h4>결제방법</h4>
+				<div class="pay custom-control custom-radio ">
+					<input type="radio" id="customRadioInline3" name="customRadioInline2" class="custom-control-input" value="카드결제" checked="checked">
+					<label class="custom-control-label" for="customRadioInline3">카드결제</label> <br>
+					<input type="text" name="cardNum" id="cardNum" class="form-control">
+				</div>
+				<div class="custom-control custom-radio ">
+					<input type="radio" id="customRadioInline4" name="customRadioInline2" class="custom-control-input" value="만나서결제">
+					<label class="custom-control-label" for="customRadioInline4">만나서 결제</label>
+				</div>
+			</div>
+			<div class="prices">
+				<input readonly="readonly" value="${totalPrice}" placeholder="결제금액:${totalPrice}"> 
+				<button type="submit" class="btn btn-danger btn-lg">주문완료하기</button>
+			</div>
+		</form>
+
+
+
+
+
+	</main>
+	<footer id="footer">
+		<jsp:include page="/WEB-INF/views/layout/footer.jsp"></jsp:include>
+	</footer>
+	<script type="text/javascript">
+		$("input[name='customRadioInline1']").change(function() {
+			var radioVal = $('input[name="customRadioInline1"]:checked').val();
+			if (radioVal == '포장') {
+				$('#forDelivery').hide()
+				$('#forWrap').show()
+			} else {
+				$('#forDelivery').show()
+				$('#forWrap').hide()
+			}
+		})
+
+		$("input[name='customRadioInline2']").change(function() {
+			var radioVal = $('input[name="customRadioInline2"]:checked').val();
+			if (radioVal == '만나서결제') {
+				$('#cardNum').hide()
+			} else {
+				$('#cardNum').show()
+
+			}
+		})
+	</script>
 </body>
 </html>

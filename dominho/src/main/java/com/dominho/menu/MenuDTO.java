@@ -7,7 +7,6 @@ public class MenuDTO {
 	private String menuType;
 	private String menuExplain;
 	private String imageFilename;
-	private int menuCount;
 	private String userId;
 	private int orderNum;
 	
@@ -42,12 +41,7 @@ public class MenuDTO {
 	public void setMenuExplain(String menuExplain) {
 		this.menuExplain = menuExplain;
 	}
-	public int getMenuCount() {
-		return menuCount;
-	}
-	public void setMenuCount(int menuCount) {
-		this.menuCount = menuCount;
-	}
+	
 	public String getUserId() {
 		return userId;
 	}

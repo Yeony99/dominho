@@ -1,6 +1,7 @@
 package com.dominho.order;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -10,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.dominho.member.SessionInfo;
+import com.dominho.menu.MenuDAO;
+import com.dominho.menu.MenuDTO;
 import com.util.MyServlet;
 
 @WebServlet("/order/*")
@@ -43,11 +46,36 @@ public class OrderServlet extends MyServlet {
 	}
 
 	private void orderSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String path = "/WEB-INF/views/order/orderResult.jsp";
-		forward(req, resp, path);
+//		
+//		
+//		dao.readMenu(0)
+//		HttpSession session = req.getSession();
+//		SessionInfo info = (SessionInfo) session.getAttribute("member");
+//		int storeNum=Integer.parseInt(req.getParameter("store"));
+//		String isDelivery=req.getParameter(req.getParameter("customRadioInline1"));
+//		int totalPrice=Integer.parseInt(req.getParameter("))
 	}
 
 	private void order(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		List<CartDTO> list=new ArrayList<CartDTO>();
+		MenuDAO dao=new MenuDAO();
+		String [] checkedMenu=req.getParameterValues("cbox");
+		int totalPrice=0;
+		for(String m:checkedMenu) {
+			CartDTO cart=new CartDTO();
+			cart.setMenuNum(Integer.parseInt(m.split(",")[1]));
+			cart.setQuantity(Integer.parseInt(m.split(",")[2]));
+			MenuDTO menu=dao.readMenu(Integer.parseInt(m.split(",")[1]));
+			cart.setMenuName(menu.getMenuName());
+			cart.setPrice(menu.getMenuPrice()*Integer.parseInt(m.split(",")[2]));
+			list.add(cart);
+			totalPrice+=menu.getMenuPrice()*Integer.parseInt(m.split(",")[2]);
+		}
+		req.setAttribute("cartlist", list);
+		req.setAttribute("totalPrice", totalPrice);
+
+		
+		
 		String path = "/WEB-INF/views/order/order.jsp";
 		forward(req, resp, path);
 	}

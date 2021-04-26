@@ -20,7 +20,7 @@ public class MenuDAO {
 		
 		try {
 			
-			sql="INSERT INTO menu(menuNum, menuName, menuExplain, menuPrice, imageFilename, menuType, menuCount "
+			sql="INSERT INTO menu(menuNum, menuName, menuExplain, menuPrice, imageFilename, menuType "
 					+ "VALUES(menu_seq.NEXTVAL, ?, ?, ?, ?, ?)";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -29,7 +29,7 @@ public class MenuDAO {
 			pstmt.setInt(3, dto.getMenuPrice());
 			pstmt.setString(4, dto.getImageFilename());
 			pstmt.setString(5, dto.getMenuType());
-			pstmt.setInt(5, dto.getMenuCount());
+			
 			
 			result = pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -229,7 +229,7 @@ public class MenuDAO {
 		String sql;
 		
 		try {
-			sql = "SELECT menuNum, menuName, menuExplain, menuPrice, menuType, menuCount "
+			sql = "SELECT menuNum, menuName, menuExplain, menuPrice, menuType "
 					+ " FROM menu "
 					+ " WHERE menuNum=?";
 			
@@ -244,7 +244,7 @@ public class MenuDAO {
 				dto.setMenuPrice(rs.getInt("menuPrice"));
 				dto.setMenuType(rs.getString("menuType"));
 				dto.setMenuName(rs.getString("menuName"));
-				dto.setMenuCount(rs.getInt("menuCount"));
+				
 				
 			}
 			
@@ -275,7 +275,7 @@ public class MenuDAO {
 		
 		try {
 			sql = "UPDATE menu SET menuName=?, menuExplain=?, menuPrice=?"
-					+ ", imageFilename=?, menuType=?, menuCount=? "
+					+ ", imageFilename=?, menuType=? "
 					+ "WHERE menuNum = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -284,8 +284,7 @@ public class MenuDAO {
 			pstmt.setInt(3, dto.getMenuPrice());
 			pstmt.setString(4, dto.getImageFilename());
 			pstmt.setString(5, dto.getMenuType());
-			pstmt.setInt(6, dto.getMenuCount());
-			pstmt.setInt(7, dto.getMenuNum());
+			pstmt.setInt(6, dto.getMenuNum());
 			
 			result = pstmt.executeUpdate();
 		} catch (Exception e) {

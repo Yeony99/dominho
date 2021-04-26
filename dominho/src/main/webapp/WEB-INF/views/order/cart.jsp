@@ -18,10 +18,12 @@ main {
 	width: 80%;
 	margin: 10px auto;
 }
-main h2{
+
+main h2 {
 	text-align: center;
-	color:#FF8E21;
+	color: #FF8E21;
 }
+
 .box, .prices {
 	border: 3px solid #FF8E21;
 	width: 100%;
@@ -47,8 +49,9 @@ main h2{
 	border: none;
 	cursor: pointer;
 }
-h3{
-float: center;
+
+h3 {
+	float: center;
 }
 </style>
 <script type="text/javascript">
@@ -60,20 +63,21 @@ float: center;
 		var count = $(".cbox").length;
 		for (var i = 0; i < count; i++) {
 			if ($(".cbox")[i].checked == true) {
-				sum += parseInt($(".cbox")[i].value);
+				var temp=$(".cbox")[i].value.split(",")
+				sum += parseInt(temp[0]);
+
 			}
 		}
 		$("#total_sum").html("합계: " + sum + "원");
 		console.log(sum)
 	}
 	function sendOrder() {
-		var f=document.form;
+		var f = document.form;
 		if ($("input:checkbox[name=cbox]:checked").length == 0) {
 			alert('주문할 메뉴를 선택하세요')
 			return false
 		}
 		return true
-	
 
 	}
 </script>
@@ -86,25 +90,27 @@ float: center;
 	<main>
 		<h3>장바구니</h3>
 
-	
+
 		<h2>${dataCount==0?"장바구니가 비었습니다.":"장바구니 목록"}</h2>
-		
-		<form name="form"  action="${pageContext.request.contextPath}/order/order.do" method="post" onsubmit="return sendOrder();">
-		<c:forEach var="dto" items="${cartlist}">
-			<div class="box">
-				<input value="${dto.price}" name="cbox"  class="cbox" type="checkbox" checked="checked" onclick="menu_sum();">
-				<img src="${pageContext.request.contextPath}/resource/images/dominho_logo.svg" alt="Card image cap" width="130px" height="130px">
-				<p>${dto.menuName} × ${dto.quantity}</p>
-				<p>총 ${dto.price}원</p>
-				<input type="button" class="img-button" onclick="javascript:location.href='${pageContext.request.contextPath}/order/cart_delete.do?num=${dto.cartId}';">
-			</div>
-		</c:forEach>
-		<div class="prices">
+
+		<form name="form" action="${pageContext.request.contextPath}/order/order.do" method="post" onsubmit="return sendOrder();">
+			<c:forEach var="dto" items="${cartlist}">
+				<div class="box">
+					<input value="${dto.price},${dto.menuNum},${dto.quantity}" name="cbox" class="cbox" type="checkbox" checked="checked" onclick="menu_sum();">
+					<img src="${pageContext.request.contextPath}/resource/images/dominho_logo.svg" alt="Card image cap" width="130px" height="130px">
+					<p>${dto.menuName}× ${dto.quantity}</p>
+					<p>총 ${dto.price}원</p>
+					<input type="button" class="img-button" onclick="javascript:location.href='${pageContext.request.contextPath}/order/cart_delete.do?num=${dto.cartId}';">
+				</div>
+				
+			</c:forEach>
+			<div class="prices">
+			
 				<button type="submit" class="btn btn-danger btn-lg">주문하기</button>
 				<div id="total_sum"></div>
 			</div>
 		</form>
-		
+
 	</main>
 
 
