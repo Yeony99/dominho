@@ -34,7 +34,8 @@
 				<span style="color: blue;">${sessionScope.member.userName}</span>님
                     &nbsp;|&nbsp;
                    <a href="${pageContext.request.contextPath}/member/logout.do">로그아웃</a>
-
+                    &nbsp;|&nbsp;
+                   <a href="${pageContext.request.contextPath}/member/mypage.do">마이페이지</a>
 			</c:if>
 		</div>
 	</div>
@@ -44,16 +45,6 @@
 	<ul class="nav">
 		<li><span class="un"><a href="#">메뉴</a></span></li>
 		<li><span class="un"><a href="#">매장</a></span></li>
-
 		<li><span class="un"><a href="#">공지사항</a></span></li>
-
-
-		<li><span class="un"><a href="#">마이페이지</a></span> <!-- <ul class="submenu">
-                <li><a href="#">주문현황조회</a></li>
-                <li><a href="#">내정보변경</a></li>
-                <li><a href="#">회원탈퇴</a></li>
-            </ul>
-             --></li>
-
 	</ul>
 </div>
