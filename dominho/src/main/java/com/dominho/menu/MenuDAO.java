@@ -21,7 +21,7 @@ public class MenuDAO {
 		try {
 			
 			sql="INSERT INTO menu(menuNum, menuName, menuExplain, menuPrice, imageFilename, menuType "
-					+ "VALUES(menu_seq.NEXTVAL, ?, ?, ?, ?, ?)";
+					+ "VALUES(menu_seq.NEXTVAL, ?, ?, ?, ?, ?, )";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getMenuName());
@@ -29,7 +29,6 @@ public class MenuDAO {
 			pstmt.setInt(3, dto.getMenuPrice());
 			pstmt.setString(4, dto.getImageFilename());
 			pstmt.setString(5, dto.getMenuType());
-			
 			
 			result = pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -87,8 +86,8 @@ public class MenuDAO {
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append("SELECT menuNum, menuName, menuPrice, imageFilename, menuType ");
-			sb.append( "FROM menu");
+			sb.append("SELECT m.menuNum, menuName, menuPrice, imageFilename, menuType, count ");
+			sb.append( "FROM menu m JOIN menuDetail md ON m.menuNum = md.menuNum ");
 			sb.append(" ORDER BY menuNum DESC");
 			sb.append("OFFSET ? ROWS FETCH FIRST ? ROWS ONLY");
 			
@@ -100,11 +99,13 @@ public class MenuDAO {
 			
 			while(rs.next()) {
 				MenuDTO dto = new MenuDTO();
+				MenuDetailDTO mddto = new MenuDetailDTO();
 				dto.setMenuNum(rs.getInt("menuNum"));
 				dto.setMenuName(rs.getString("menuName"));
 				dto.setMenuPrice(rs.getInt("menuPrice"));
 				dto.setImageFilename(rs.getString("imageFilename"));
 				dto.setMenuType(rs.getString("menuType"));
+				mddto.setCount(rs.getInt("count"));
 				
 				list.add(dto);
 				
@@ -137,9 +138,9 @@ public class MenuDAO {
 		
 		try {
 			if(condition.equalsIgnoreCase("menuName")) {
-				sql = "SELECT COUNT(*) FROM menu WHERE INSTR(menuName, ?) = 1";
+				sql = "SELECT COUNT(*) FROM menu WHERE INSTR(menuName, ?) >= 1";
 			} else {
-				sql = "SELECT COUNT(*) FROM menu WHERE INSTR(menuType, ?) = 1";
+				sql = "SELECT COUNT(*) FROM menu WHERE INSTR(menuType, ?) >= 1";
 			}
 			
 			pstmt = conn.prepareStatement(sql);
@@ -178,13 +179,15 @@ public class MenuDAO {
 		String sql;
 		
 		try {
-			sql = "SELECT menuNum, menuName, menuPrice, imageFilename, menuType FROM menu";
+			sql = "SELECT m.menuNum, menuName, menuPrice, imageFilename, menuType, count "
+					+ " FROM menu m "
+					+ " JOIN menuDetail md ON m.menuNum = md.menuNum ";
 			if(condition.equals("menuName")) {
-				sql += " WHERE INSTR(menuName, ?) = 1";
+				sql += " WHERE INSTR(menuName, ?) >= 1";
 			} else if(condition.equals("menuType")) {
-				sql += "WHERE(menuType, ?) = 1";
+				sql += "WHERE(menuType, ?) >= 1";
 			}
-			sql += " ORDER BY num DESC "
+			sql += " ORDER BY menuNum DESC "
 					+ "OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -195,11 +198,13 @@ public class MenuDAO {
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				MenuDTO dto = new MenuDTO();
+				MenuDetailDTO mddto = new MenuDetailDTO();
 				dto.setMenuNum(rs.getInt("menuNum"));
 				dto.setMenuName(rs.getString("menuName"));
 				dto.setMenuPrice(rs.getInt("menuPrice"));
 				dto.setImageFilename(rs.getString("imageFilename"));
 				dto.setMenuType(rs.getString("menuType"));
+				mddto.setCount(rs.getInt("count"));
 				
 				list.add(dto);
 			}
@@ -224,13 +229,15 @@ public class MenuDAO {
 	
 	public MenuDTO readMenu(int menuNum) {
 		MenuDTO dto = new MenuDTO();
+		MenuDetailDTO mddto = new MenuDetailDTO();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
 		
 		try {
-			sql = "SELECT menuNum, menuName, menuExplain, menuPrice, menuType "
-					+ " FROM menu "
+			sql = "SELECT m.menuNum, menuName, menuExplain, menuPrice, imageFileName, count "
+					+ " FROM menu m "
+					+ " JOIN menuDetail md ON m.menuNum = md.menuNum "
 					+ " WHERE menuNum=?";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -239,12 +246,14 @@ public class MenuDAO {
 			
 			if(rs.next()) {
 				dto = new MenuDTO();
+				mddto = new MenuDetailDTO();
 				dto.setMenuNum(rs.getInt("menuNum"));
 				dto.setMenuExplain(rs.getString("menuExplain"));
 				dto.setMenuPrice(rs.getInt("menuPrice"));
-				dto.setMenuType(rs.getString("menuType"));
+				dto.setImageFilename(rs.getString("imageFileName"));
+				//dto.setMenuType(rs.getString("menuType"));
 				dto.setMenuName(rs.getString("menuName"));
-				
+				mddto.setCount(rs.getInt("count"));
 				
 			}
 			
@@ -269,14 +278,16 @@ public class MenuDAO {
 	
 	// 메뉴 수정하기
 	public int updateMenu(MenuDTO dto) throws SQLException {
+		MenuDetailDTO mddto = new MenuDetailDTO();
 		int result = 0;
 		PreparedStatement pstmt = null;
 		String sql;
 		
 		try {
-			sql = "UPDATE menu SET menuName=?, menuExplain=?, menuPrice=?"
-					+ ", imageFilename=?, menuType=? "
-					+ "WHERE menuNum = ? ";
+			sql = "UPDATE menu SET menuName=?, menuExplain=?, menuPrice=? "
+					+ " , imageFileName=?, menuType=?, count=? "
+					+ " FROM cart c JOIN menuDetail md ON c.menuNum = md.menuNum "
+					+ " WHERE menuNum=?, userId = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getMenuName());
@@ -284,7 +295,9 @@ public class MenuDAO {
 			pstmt.setInt(3, dto.getMenuPrice());
 			pstmt.setString(4, dto.getImageFilename());
 			pstmt.setString(5, dto.getMenuType());
-			pstmt.setInt(6, dto.getMenuNum());
+			pstmt.setInt(6, mddto.getCount());
+			pstmt.setInt(7, dto.getMenuNum());
+			pstmt.setString(8, dto.getUserId());
 			
 			result = pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -330,6 +343,32 @@ public class MenuDAO {
 			}
 		}
 		
+		return result;
+	}
+	
+	public int updateCount(MenuDetailDTO mddto) throws SQLException {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		try {
+			sql = "UPDATE menu SET md.menuNum = m.menuNum, count=? "
+					+ "FROM menu m JOIN menuDetail md "
+					+ "ON m.menuNum = md.menuNum WHERE menuNum=?";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, mddto.getCount());
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
 		return result;
 	}
 

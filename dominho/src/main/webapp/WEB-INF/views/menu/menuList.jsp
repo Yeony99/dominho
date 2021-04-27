@@ -8,8 +8,8 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/layout.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style2.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/layout2.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/jquery/css/smoothness/jquery-ui.min.css" type="text/css">
 
 <style type="text/css">
@@ -85,7 +85,7 @@
 		<table style="width: 100%; border-spacing: 0;">
 		   <tr height="35">
 			<td align="center">
-		        ${dataCount==0?"등록된 게시물이 없습니다.":paging}
+		        ${dataCount==0?"등록된 메뉴가 없습니다.":paging}
 			</td>
 		   </tr>
 		</table>
@@ -96,7 +96,7 @@
 		          &nbsp;
 		      </td>
 		      <td align="right" width="50%">
-		          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/photo/created.do';">글올리기</button>
+		          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/menu/created.do';">메뉴 올리기</button>
 		      </td>
 		   </tr>
 		</table>
