@@ -109,36 +109,42 @@ public class OrderServlet extends MyServlet {
 			alladdress.add(s.getStoreAddress());
 		}
 		Iterator<StoreDTO> it = allList2.iterator();// ConcurrentModificationException막기위함
+		try {
+				for (String m : checkedMenu) {
+				CartDTO cart = new CartDTO();
+				cart.setMenuNum(Integer.parseInt(m.split(",")[1]));
+				cart.setQuantity(Integer.parseInt(m.split(",")[2]));
+				MenuDTO menu = dao.readMenu(Integer.parseInt(m.split(",")[1]));
+				cart.setMenuName(menu.getMenuName());
+				cart.setPrice(menu.getMenuPrice() * Integer.parseInt(m.split(",")[2]));
+				list.add(cart);
+				totalPrice += menu.getMenuPrice() * Integer.parseInt(m.split(",")[2]);
+				// 배달가능한 매장 리스트
+				List<StoreDTO> deliveryList = mdao.deliveryStore(cart.getMenuNum(), cart.getQuantity());
+				// 배달가능한 매장 주소들
+				List<String> storeaddress = new ArrayList<String>();
+				for (StoreDTO s : deliveryList) {
+					storeaddress.add(s.getStoreAddress());
+				}
 
-		for (String m : checkedMenu) {
-			CartDTO cart = new CartDTO();
-			cart.setMenuNum(Integer.parseInt(m.split(",")[1]));
-			cart.setQuantity(Integer.parseInt(m.split(",")[2]));
-			MenuDTO menu = dao.readMenu(Integer.parseInt(m.split(",")[1]));
-			cart.setMenuName(menu.getMenuName());
-			cart.setPrice(menu.getMenuPrice() * Integer.parseInt(m.split(",")[2]));
-			list.add(cart);
-			totalPrice += menu.getMenuPrice() * Integer.parseInt(m.split(",")[2]);
-			// 배달가능한 매장 리스트
-			List<StoreDTO> deliveryList = mdao.deliveryStore(cart.getMenuNum(), cart.getQuantity());
-			// 배달가능한 매장 주소들
-			List<String> storeaddress = new ArrayList<String>();
-			for (StoreDTO s : deliveryList) {
-				storeaddress.add(s.getStoreAddress());
-			}
-
-			for (String s : alladdress) {
-				if (!storeaddress.contains(s)) {// 모든 매장중에 배달 가능한 매장이 아니면 지우기
-					while (it.hasNext()) {// 값으로 넘겨야하는 배달가능한 모든 매장
-						StoreDTO dto = it.next();
-						if (dto.getStoreAddress().equals(s)) { // s는 배달가능한 매장에 포함 안된 매장주소
-							it.remove();
-							allList2.remove(dto);
+				for (String s : alladdress) {
+					if (!storeaddress.contains(s)) {// 모든 매장중에 배달 가능한 매장이 아니면 지우기
+						while (it.hasNext()) {// 값으로 넘겨야하는 배달가능한 모든 매장
+							StoreDTO dto = it.next();
+							if (dto.getStoreAddress().equals(s)) { // s는 배달가능한 매장에 포함 안된 매장주소
+								it.remove();
+								allList2.remove(dto);
+							}
 						}
 					}
 				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		
+		
+
 		req.setAttribute("allstorelist", allList);
 		req.setAttribute("cartlist", list);
 		req.setAttribute("totalPrice", totalPrice);
@@ -149,9 +155,11 @@ public class OrderServlet extends MyServlet {
 	}
 
 	private void orderComplete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		// 모든 주문 다 보여주기 시간순으로
-		OrderDAO mdao=new OrderDAO();
-		List<AllOrderInfoDTO> myorders = mdao.allMyOrder();
+		OrderDAO mdao = new OrderDAO();
+		List<AllOrderInfoDTO> myorders = mdao.recentMyOrder(info.getUserId());
 		req.setAttribute("AllOrders", myorders);
 		String path = "/WEB-INF/views/order/orderResult.jsp";
 		forward(req, resp, path);

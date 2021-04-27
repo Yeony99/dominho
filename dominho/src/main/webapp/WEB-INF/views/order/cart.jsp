@@ -21,11 +21,12 @@ main {
 
 main h2 {
 	text-align: center;
-	color: #FF8E21;
+	color: #CA3D2A;
+	font-weight: bold;
 }
 
 .box, .prices {
-	border: 3px solid #FF8E21;
+	border: 3px solid #0E191A;
 	width: 100%;
 	height: auto;
 	display: flex;
@@ -36,8 +37,9 @@ main h2 {
 }
 
 .prices {
-	background: #FF8E21;
+	background: linear-gradient(125deg, #FCD6B8, #FF8E21, #CA3D2A);
 	color: white;
+	border:none;
 }
 
 .img-button {
@@ -92,7 +94,7 @@ h3 {
 
 
 		<h2>${dataCount==0?"장바구니가 비었습니다.":"장바구니 목록"}</h2>
-
+		<hr>
 		<form name="form" action="${pageContext.request.contextPath}/order/order.do" method="post" onsubmit="return sendOrder();">
 			<c:forEach var="dto" items="${cartlist}">
 				<div class="box">
