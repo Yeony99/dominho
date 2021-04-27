@@ -47,10 +47,10 @@ public class BoardServlet extends MyUploadServlet {
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
-//		if(uri.indexOf("boardList")== -1 && info == null) {
-//			resp.sendRedirect(cp+"/member/login");
-//			return;
-//		}
+		if(uri.indexOf("boardList")== -1 && info == null) {
+			resp.sendRedirect(cp+"/member/login.do");
+			return;
+		}
 		
 		// 파일 저장 경로
 		String root = session.getServletContext().getRealPath("/");
@@ -61,13 +61,13 @@ public class BoardServlet extends MyUploadServlet {
 			boardList(req,resp);
 		} else if(uri.indexOf("board_create")!=-1) {
 			createdForm(req,resp);
-		}else if(uri.indexOf("board_create_ok")!=-1) {
+		}else if(uri.indexOf("board_ok_create")!=-1) {
 			createdsubmit(req,resp);
-		} else if(uri.indexOf("board")!=-1) {
+		} else if(uri.indexOf("articleBoard")!=-1) {
 			board(req,resp);
 		} else if(uri.indexOf("board_update")!=-1) {
 			updateForm(req,resp);
-		} else if(uri.indexOf("board_update_ok")!=-1) {
+		} else if(uri.indexOf("board_ok_update")!=-1) {
 			updateSubmit(req,resp);
 		} else if(uri.indexOf("deleteFile")!=-1) {
 			deleteFile(req,resp);
@@ -147,11 +147,11 @@ public class BoardServlet extends MyUploadServlet {
 		
 		// 페이징 처리
 		String listUrl = cp+"/admin/boardList";
-		String boardUrl = cp+"/admin/board?page="+current_page;
+		String articleBoardUrl = cp+"/admin/articleBoard?page="+current_page;
 		
 		if(query.length()!=0) {
 			listUrl += "?" + query;
-			boardUrl += "&" +query;
+			articleBoardUrl += "&" +query;
 		}
 		
 		String paging = util.paging(current_page, total_page, listUrl);
@@ -160,7 +160,7 @@ public class BoardServlet extends MyUploadServlet {
 		req.setAttribute("dataCount", dataCount);
 		req.setAttribute("page", current_page);
 		req.setAttribute("total_page", total_page);
-		req.setAttribute("boardUrl", boardUrl);
+		req.setAttribute("articleBoardUrl", articleBoardUrl);
 		req.setAttribute("paging", paging);
 		req.setAttribute("condition", condition);
 		req.setAttribute("keyword", keyword);
@@ -180,7 +180,7 @@ public class BoardServlet extends MyUploadServlet {
 			return;
 		}
 		
-		req.setAttribute("mode", "created");
+		req.setAttribute("mode", "create");
 		forward(req, resp, "/WEB-INF/views/admin/boardCreate.jsp");
 		
 	}
@@ -253,8 +253,7 @@ public class BoardServlet extends MyUploadServlet {
 				resp.sendRedirect(cp+"/admin/boardList?"+query);
 				return;
 			}
-			dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
-			
+						
 			// 이전글 다음글
 			BoardDTO preReadDTO = dao.preRead(dto.getPostNum(), condition, keyword);
 			BoardDTO nextReadDTO = dao.nextRead(dto.getPostNum(), condition, keyword);

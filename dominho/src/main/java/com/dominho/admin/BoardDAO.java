@@ -15,9 +15,9 @@ public class BoardDAO {
 	public int insertBoard(BoardDTO dto) throws SQLException{
 		int result= 0;
 		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 		String sql;
 		int seq;
-		ResultSet rs = null;
 		
 		try {
 			sql = "SELECT board_seq.NEXTVAL FROM dual";
@@ -34,7 +34,7 @@ public class BoardDAO {
 			rs = null;
 			pstmt=null;
 			
-			sql ="INSERT INTO postBoard(portNum,memberid,subject,content,hitCount,created) VALUES(?,?,?,?,0,SYSDATE)";
+			sql ="INSERT INTO postBoard(postNum,memberid,subject,content,hitCount,created) VALUES(?,?,?,?,0,SYSDATE)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, dto.getPostNum());
 			pstmt.setString(2, dto.getMemberid());
@@ -48,10 +48,12 @@ public class BoardDAO {
 			if(dto.getSaveFiles()!=null) { 
 				sql = "INSERT INTO boardFile(fileNum, num, saveFilename, originalFilename) VALUES (boardFile_seq.NEXTVAL,?,?,?)";
 				pstmt=conn.prepareStatement(sql);
+				
 				for(int i =0; i<dto.getSaveFiles().length; i++) {
 					pstmt.setInt(1, dto.getPostNum());
 					pstmt.setString(2, dto.getSaveFiles()[i]);
 					pstmt.setString(3, dto.getOriginalFiles()[i]);
+					pstmt.executeUpdate();
 				}
 			}			
 		} catch (Exception e) {

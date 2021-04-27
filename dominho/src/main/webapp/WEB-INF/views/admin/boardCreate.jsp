@@ -30,7 +30,7 @@ function sendBoard() {
 		return;
 	}
 	
-	f.action="${pageContext.request.contextPath}/admin/${mode}_ok";
+	f.action="${pageContext.request.contextPath}/admin/board_ok_${mode}";
 	f.submit();
 }
 
@@ -48,27 +48,49 @@ function sendBoard() {
 </script>
 
 <style type="text/css">
+.container {
+	padding: 50px 0px 0px 30px;
+}
+
 .body_title span {
 	font-size: 30px;
 	color: #111;
 	font-weight: 200;
 }
-.boxTA{
+
+.boxTA {
+	resize: none;
 	max-height: 295px;
-    overflow-y: scroll;
-    width: 650px; 
-    height: 295px;
-    border: solid 1px #ddd;
-    box-sizing: border-box;
-    padding: 12px;
-    border-radius: 0;
-    overflow: auto;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    line-height: 20px;
+	overflow-y: scroll;
+	width: 650px;
+	height: 295px;
+	border: solid 1px #ddd;
+	border-radius: 0;
+	appearance: none;
+	line-height: 20px;
+	margin-left: 10px;
+	margin-top: 20px;
+	padding-left: 15px;
+	padding-top: 15px;
 }
 
+.boxTF {
+	height: 42px;
+	width: 650px;
+	border: solid 1px #ddd;
+	padding-left: 15px;
+}
+.btn{
+	width: 150px;
+	height: 50px;
+	font-size: medium;
+	border-radius: 0;
+	background-color: #424242;
+	color: white;
+	cursor: pointer;
+	border: none;
+	
+}
 </style>
 </head>
 <body>
@@ -84,11 +106,11 @@ function sendBoard() {
 		
 		<div>
 			<form name="boardForm" method="post" enctype="multipart/form-data">
-				<table style="width: 100%;margin: 30px auto; border-spacing: 0px; border-collapse: collapse; border-top: 1.5px solid #111;">
-					<tr align="left" style=" height=100px; border-bottom: 1px solid #ddd;">
-						<td style="text-align: center; width=250px;">제목</td>
-						<td style="padding-left: 10px;">
-							<input type="text" name="subject" maxlength="50" class="boxTF" style="width: 650px; height: 40px;" value="${dto.subject}">
+				<table style="width: 100%;margin: 30px auto; border-spacing: 0px; border-collapse: collapse; border-top: 2px solid #111;">
+					<tr align="left" height=100px; style=" border-bottom: 1px solid #ddd; ">
+						<td style="text-align: center; ">제목</td>
+						<td style="padding-left: 10px; ">
+							<input type="text" name="subject" maxlength="50" class="boxTF" value="${dto.subject}">
 						</td>			
 					</tr>
 					<tr align="left" style="border-bottom: 1px solid #ddd; height: 355px;">
@@ -97,16 +119,16 @@ function sendBoard() {
 							<textarea name="content" class="boxTA">${dto.content}</textarea>
 						</td>
 					</tr>
-					<tr align="left" style="border-bottom: 1px solid #ddd; height=100px;">
-						<td style="text-align: center;" width=250px;">첨부파일</td>
+					<tr align="left" height=100px; style="border-bottom: 1px solid #ddd; ">
+						<td style="text-align: center;">첨부파일</td>
 						<td style="padding-left: 10px;">
-							<input type="file" name="selectFile" class="boxTF" size="53" style="height: 40px; mutiple ="multuple">
+							<input type="file" name="selectFile" class="boxTF" size="53" style="height: 40px; padding-top: 15px;" multiple="multiple">
 						</td>
 					</tr>					
 					
 					<c:if test="${mode=='update'}">
 						<c:forEach var="vo" items="${listFile}">
-							<tr align="left" height="40" style="border-bottom: 1px solid #ddd">
+							<tr align="left" style="border-bottom: 1px solid #ddd">
 								<td width="100" style="text-align: center;">첨부된 파일</td>
 								<td style="padding-left: 10px;">
 									<a href="javascript:deleteFile('${vo.fileNum}');"><i class="far fa-trash-alt"></i></a>
@@ -118,11 +140,11 @@ function sendBoard() {
 				</table>
 				
 				<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
-					<tr height="60">
-						<td align="center">
+					<tr height="60" >
+						<td align="center" style="padding-bottom: 30px;">
 							<button type="button" class="btn" onclick="sendBoard();">${mode=='update'?'수정':'등록'}</button>
-							<button type="reset" class="btn">다시입력</button>
 							<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/admin/boardList';">${mode=='update'?'수정취소':'등록취소'}</button>
+							<button type="reset" class="btn">재입력</button>
 							<c:if test="${mode=='update'}">
 								<input type="hidden" name="postNum" value="${dto.postNum}">
 								<input type="hidden" name="page" value="${page}">					

@@ -9,10 +9,10 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/layout2.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style2.css" type="text/css">
-<title>Insert title here</title>
+<title>도민호피자 - 당신의 인생에 완벽한 한끼! Life Food, Domino's</title>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <script type="text/javascript">
-<c:if test=${sessionScope.member.userId=='admin'}">
+<c:if test="${sessionScope.member.userId=='admin'}">
 function deleteBoard(postNum) {
 	if(confirm("게시물을 삭제하시겠습니까 ?")){
 		var url = "${pagaContext.request.contextPath}/admin/board_delete?num="num+"&${query}";
@@ -27,6 +27,9 @@ function deleteBoard(postNum) {
 	font-size: 30px;
 	color: #111;
 	font-weight: 200;
+}
+.container {
+	padding: 30px 0px 0px 30px;
 }
 </style>
 </head>
@@ -63,7 +66,7 @@ function deleteBoard(postNum) {
 				<c:forEach var="vo" items="${listFile}">
 					<tr height="55" style="border-bottom: 1px solid #ddd;">
 						<td colspan="2" align="left" style="padding-left: 5px;">
-							첨&nbsp;부&nbsp; <a href="${pageContext.request.contextPath}/admin/donload?fileNum=${vo.fileNum}">${vo.originalFilename}</a>
+							첨&nbsp;부&nbsp; <a href="${pageContext.request.contextPath}/admin/download?fileNum=${vo.fileNum}">${vo.originalFilename}</a>
 						</td>
 					</tr>
 				</c:forEach>
@@ -71,7 +74,7 @@ function deleteBoard(postNum) {
 					<td colspan="2" align="left" style="padding-left: 5px;">
 					이전
 					<c:if test="${not empty preReadDto}">
-						<a href="${pageContext.request.contextPath}/admin/board?${query}&postNum=${preReadDto.postNum}">${preReadDto.subject} </a>
+						<a href="${pageContext.request.contextPath}/admin/articleBoard?${query}&postNum=${preReadDto.postNum}">${preReadDto.subject} </a>
 					</c:if>
 					</td>
 				</tr>
@@ -80,7 +83,7 @@ function deleteBoard(postNum) {
 					<td colspan="2" align="left" style="padding-left: 5px;">
 					다음
 					<c:if test="${not empty nextReadDto}">
-						<a href="${pageContext.request.contextPath}/admin/board?${query}&postNum=${nextReadDto.postNum}">${nextReadDto.subject} </a>
+						<a href="${pageContext.request.contextPath}/admin/articleBoard?${query}&postNum=${nextReadDto.postNum}">${nextReadDto.subject} </a>
 					</c:if>
 					</td>
 				</tr>
