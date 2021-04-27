@@ -16,25 +16,39 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resource/js/util.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resource/jquery/js/jquery.min.js"></script>
 <script type="text/javascript">
-    function sendOk() {
+    function sendMenu() {
         var f = document.menuForm;
 
     	var str = f.menuName.value;
         if(!str) {
             alert("메뉴 이름을 입력하세요. ");
-            f.subject.focus();
+            f.menuName.focus();
+            return;
+        }
+        
+        str = f.menuPrice.value;
+        if(!str) {
+            alert("메뉴 가격을 입력하세요. ");
+            f.menuPrice.focus();
+            return;
+        }
+        
+        str = f.menuType.value;
+        if(!str) {
+            alert("메뉴 분류를 입력하세요. ");
+            f.menuType.focus();
             return;
         }
 
-    	str = f.content.value;
+    	str = f.menuExplain.value;
         if(!str) {
             alert("메뉴 설명을 입력하세요. ");
-            f.content.focus();
+            f.menuExplain.focus();
             return;
         }
         
         var mode = "${mode}";
-        if( mode=="created" || (mode=="update" && f.selectFile.value != "") ) {
+        if( mode=="menuCreated" || (mode=="update" && f.selectFile.value != "") ) {
         	if(! /(\.gif|\.jpg|\.png|\.jpeg)$/i.test(f.selectFile.value)) {
         		alert("이미지 파일만 가능합니다.");
         		f.selectFile.focus();
@@ -65,7 +79,7 @@
 			  <tr align="left" height="40" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;"> 
 			      <td width="100" bgcolor="#eeeeee" style="text-align: center;">메&nbsp;&nbsp;&nbsp;&nbsp;뉴</td>
 			      <td style="padding-left:10px;"> 
-			          <input type="text" name="subject" maxlength="100" class="boxTF" style="width: 95%;" value="${dto.menuName}">
+			          <input type="text" name="menuName" maxlength="100" class="boxTF" style="width: 95%;" value="${dto.menuName}">
 			      </td>
 			  </tr>
 
@@ -75,17 +89,25 @@
 			          ${sessionScope.member.userName}
 			      </td>
 			  </tr>
+			  
+			  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;"> 
+			      <td width="100" bgcolor="#eeeeee" style="text-align: center;">가격</td>
+			      <td style="padding-left:10px;"> 
+			          <input type="text" name="menuPrice" maxlength="100" class="boxTF" style="width: 95%;" value="${dto.menuPrice}">
+			      </td>
+			  </tr>
+			  
+			  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;"> 
+			      <td width="100" bgcolor="#eeeeee" style="text-align: center;">분류</td>
+			      <td style="padding-left:10px;"> 
+			          <input type="text" name="menuType" maxlength="100" class="boxTF" style="width: 95%;" value="${dto.menuType}">
+			      </td>
+			  </tr>
 			
 			  <tr align="left" style="border-bottom: 1px solid #cccccc;"> 
 			      <td width="100" bgcolor="#eeeeee" style="text-align: center; padding-top:5px;" valign="top">내&nbsp;&nbsp;&nbsp;&nbsp;용</td>
 			      <td valign="top" style="padding:5px 0px 5px 10px;"> 
-			          <textarea name="content" rows="12" class="boxTA" style="width: 95%;">${dto.content}</textarea>
-			      </td>
-			  </tr>
-			  <tr align="left" style="border-bottom: 1px solid #cccccc;"> 
-			      <td width="100" bgcolor="#eeeeee" style="text-align: center; padding-top:5px;" valign="top">재&nbsp;&nbsp;&nbsp;&nbsp;고</td>
-			      <td valign="top" style="padding:5px 0px 5px 10px;"> 
-			          <textarea name="content" rows="12" class="boxTA" style="width: 95%;">${mddto.count}</textarea>
+			          <textarea name="menuExplain" rows="12" class="boxTA" style="width: 95%;">${dto.menuExplain}</textarea>
 			      </td>
 			  </tr>
 			  
@@ -105,9 +127,13 @@
 			      		<input type="hidden" name="imageFilename" value="${dto.imageFilename}">
 			      		<input type="hidden" name="page" value="${page}">
 			      	</c:if>
-			        <button type="button" class="btn" onclick="sendOk();">${mode=='update'?'수정완료':'등록하기'}</button>
+			        <button type="button" class="btn" onclick="sendMenu();">${mode=='update'?'수정완료':'등록하기'}</button>
 			        <button type="reset" class="btn">다시입력</button>
 			        <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/menu/menuList.do';">${mode=='update'?'수정취소':'등록취소'}</button>
+			        <c:if test="${mode=='update'}">
+			        	<input type="hidden" name="menuNum" value="${dto.menuNum}">
+			        	<input type="hidden" name="page" value="${page}">
+			        </c:if>
 
 				  </td>
 			    </tr>

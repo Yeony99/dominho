@@ -74,7 +74,7 @@ public class MenuServlet extends MyUploadServlet {
 		String condition = req.getParameter("condition");
 		String keyword = req.getParameter("keyword");
 		if(condition == null) {
-			condition = "name";
+			condition = "all";
 			keyword="";
 		}
 		
@@ -143,15 +143,15 @@ public class MenuServlet extends MyUploadServlet {
 		
 		try {
 			MenuDTO dto = new MenuDTO();
-			MenuDetailDTO mddto = new MenuDetailDTO();
+			//MenuDetailDTO mddto = new MenuDetailDTO();
 			
 			dto.setMenuName(req.getParameter("menuName"));
 			dto.setMenuExplain(req.getParameter("menuExplain"));
 			dto.setMenuPrice(Integer.parseInt(req.getParameter("menuPrice")));
 			dto.setImageFilename(req.getParameter("imageFilename"));
-			dto.setMenuType(req.getParameter("menuYType"));
-			mddto.setCount(Integer.parseInt(req.getParameter("count")));
-			dto.setUserId(info.getUserId());
+			dto.setMenuType(req.getParameter("menuType"));
+			//mddto.setCount(Integer.parseInt(req.getParameter("count")));
+			dto.setmemberId(info.getUserId());
 			
 			String filename = null;
 			Part p = req.getPart("selectFile");
@@ -181,7 +181,7 @@ public class MenuServlet extends MyUploadServlet {
 			String condition = req.getParameter("condition");
 			String keyword = req.getParameter("keyword");
 			if(condition == null) {
-				condition = "name";
+				condition = "all";
 				keyword = "";
 			}
 			keyword = URLDecoder.decode(keyword, "utf-8");
@@ -198,8 +198,6 @@ public class MenuServlet extends MyUploadServlet {
 			}
 			
 			dto.setMenuExplain(dto.getMenuExplain().replaceAll("\n", "<br>"));
-			
-			// 이전글 다음글 부분
 			
 			req.setAttribute("dto", dto);
 			req.setAttribute("page", page);
@@ -224,8 +222,8 @@ public class MenuServlet extends MyUploadServlet {
 			int num = Integer.parseInt(req.getParameter("num"));
 			MenuDTO dto = dao.readMenu(num);
 			
-			if(dto == null || (! dto.getUserId().equals(info.getUserId()))) {
-				resp.sendRedirect(cp+"/photo/list.do?page="+page);
+			if(dto == null || (! dto.getMemberId().equals(info.getUserId()))) {
+				resp.sendRedirect(cp+"/menu/menuList.do?page="+page);
 				return;
 			}
 			
@@ -286,7 +284,7 @@ public class MenuServlet extends MyUploadServlet {
 			String condition = req.getParameter("condition");
 			String keyword = req.getParameter("keyword");
 			if(condition == null) {
-				condition = "name";
+				condition = "all";
 				keyword = "";
 			}
 			

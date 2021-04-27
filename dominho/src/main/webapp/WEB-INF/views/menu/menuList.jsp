@@ -37,7 +37,12 @@
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/resource/js/util.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resource/jquery/js/jquery.min.js"></script>
-<script type="text/javascript"></script>
+<script type="text/javascript">
+function searchList() {
+	var f=document.searchForm;
+	f.submit();
+}
+</script>
 </head>
 
 <body>
@@ -49,7 +54,7 @@
 <div class="container">
 <div class="body-container" style="width: 700px;">
     <div class="body-title">
-        <h3><span style="font-family: Webdings">2</span> 메뉴 </h3>
+        <h3> 메뉴 </h3>
     </div>
     
     <div>
@@ -62,9 +67,17 @@
     			<c:out value="</tr><tr>" escapeXml="false"/>
     		</c:if>
     		<td width="210" align="center">
-    			<div class="imgLayout" onclick="location.href='${articleUrl}&num=${dto.num}';">
-    				<img src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFilename}" width="180" height="180">
-    				<span class="subject">${dto.subject}</span>
+    			<div class="imgLayout" onclick="location.href='${articleUrl}&num=${dto.menuNum}';">
+    				<img src="${pageContext.request.contextPath}/uploads/menu/${dto.imageFilename}" width="180" height="180">
+    				<span class="subject">${dto.menuName}</span>
+    				<c:choose>
+    					<c:when test="${sessionScope.member.userId=='admin'}">
+    						<span>${mddto.count}</span>
+    					</c:when>
+    					<c:otherwise>
+    					
+    					</c:otherwise>
+    				</c:choose>
     			</div>
     		</td>
     	</c:forEach>
@@ -92,11 +105,21 @@
 		
 		<table style="width: 100%; margin-top: 10px; border-spacing: 0;">
 		   <tr height="40">
-		      <td align="left" width="50%">
-		          &nbsp;
-		      </td>
+		      <td align="left" width="100">
+			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/menu/menuList.do';">새로고침</button>
+			      </td>
+			      <td align="center">
+			          <form name="searchForm" action="${pageContext.request.contextPath}/menu/menuList.do" method="post">
+			              <select name="condition" class="selectField">
+			                  <option value="all" ${condition=="all"?"selected='selected'":""}>메뉴+분류</option>
+			                  <option value="menuType" ${condition=="menuType"?"selected='selected'":""}>분류</option>
+			            </select>
+			            <input type="text" name="keyword" class="boxTF" value="${keyword}">
+			            <button type="button" class="btn" onclick="searchList()">검색</button>
+			        </form>
+			      </td>
 		      <td align="right" width="50%">
-		          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/menu/created.do';">메뉴 올리기</button>
+		          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/menu/menuCreated.do';">메뉴 올리기</button>
 		      </td>
 		   </tr>
 		</table>

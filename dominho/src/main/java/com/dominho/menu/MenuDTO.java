@@ -7,9 +7,9 @@ public class MenuDTO {
 	private String menuType;
 	private String menuExplain;
 	private String imageFilename;
-	private String userId;
+	private String memberId;
 	private int orderNum;
-	
+	private int storeNum;
 	
 	public int getMenuNum() {
 		return menuNum;
@@ -42,11 +42,11 @@ public class MenuDTO {
 		this.menuExplain = menuExplain;
 	}
 	
-	public String getUserId() {
-		return userId;
+	public String getMemberId() {
+		return memberId;
 	}
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setmemberId(String memberId) {
+		this.memberId = memberId;
 	}
 	public int getOrderNum() {
 		return orderNum;
@@ -59,6 +59,12 @@ public class MenuDTO {
 	}
 	public void setImageFilename(String imageFilename) {
 		this.imageFilename = imageFilename;
+	}
+	public int getStoreNum() {
+		return storeNum;
+	}
+	public void setStoreNum(int storeNum) {
+		this.storeNum = storeNum;
 	}
 	
 	

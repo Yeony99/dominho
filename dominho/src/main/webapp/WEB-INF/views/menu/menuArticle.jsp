@@ -53,31 +53,31 @@ function deletePhoto(num) {
 			<tr>
 				<td colspan="2" align="left" style="padding: 10px 5px; width">
 					<div>
-			      		<img src="${pageContext.request.contextPath}/uploads/photo/${dto.imageFilename}" style="max-width: 100%; height: auto; resize: both;">
+			      		<img src="${pageContext.request.contextPath}/uploads/menu/${dto.imageFilename}" style="max-width: 100%; height: auto; resize: both;">
 			      	</div>
 				</td>
 			</tr>
 			
 			<tr style="border-bottom: 1px solid #cccccc;">
 			  <td colspan="2" align="left" style="padding: 10px 5px;" valign="top" height="200">
-			      ${dto.content}
+			      ${dto.menuExplain}
 			   </td>
 			</tr>
 			
 			<tr height="45">
 			    <td>
 			    	<c:choose>
-			    		<c:when test="${dto.userId==sessionScope.member.userId}">
+			    		<c:when test="${sessionScope.member.userId=='admin'}">
 			    			<p>재고 : ${mddto.count}</p>
-			          		<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/menu/update.do?num=${dto.num}&page=${page}';">수정</button>
+			          		<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/menu/menuUpdate.do?num=${dto.menuNum}&page=${page}';">수정</button>
 			          	</c:when>
 			          	<c:otherwise>
 			          		
 			          	</c:otherwise>
 			        </c:choose>	
 			        <c:choose>
-			        	<c:when test="${dto.userId==sessionScope.member.userId}">
-			          		<button type="button" class="btn" onclick="deletePhoto('${dto.num}');">삭제</button>
+			        	<c:when test="${sessionScope.member.userId=='admin'}">
+			          		<button type="button" class="btn" onclick="deleteMenu('${dto.menuNum}');">삭제</button>
 			          	</c:when>
 			          	<c:otherwise>
 			          		
