@@ -3,6 +3,7 @@ package com.dominho.order;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -44,6 +45,8 @@ public class OrderServlet extends MyServlet {
 			cartDelete(req, resp);
 		} else if (uri.indexOf("cart.do") != -1) {
 			cartList(req, resp);
+		} else if (uri.indexOf("orderComplete.do") != -1) {
+			orderComplete(req, resp);
 		}
 	}
 
@@ -54,19 +57,25 @@ public class OrderServlet extends MyServlet {
 		double totalPrice = 0;
 		String creditCard = req.getParameter("cardNum");
 		String isDelivery = req.getParameter("customRadioInline1");
+		String tel = req.getParameter("tel");
+		String address = req.getParameter("zip");
+		address += req.getParameter("addr1");
+		address += req.getParameter("addr2");
+		String request = req.getParameter("requests");
 		int storeNum;
-		if (isDelivery == "배달") {
+		System.out.println("배달여부" + isDelivery);
+		if (isDelivery.equals("배달")) {
 			storeNum = Integer.parseInt(req.getParameter("store2"));
 			totalPrice = Integer.parseInt(req.getParameter("totalPrice"));
 		} else {
 			storeNum = Integer.parseInt(req.getParameter("store1"));
-			totalPrice = Integer.parseInt(req.getParameter("totalPrice"))*0.8;
+			totalPrice = Integer.parseInt(req.getParameter("totalPrice")) * 0.8;
 
 		}
 
 		// 주문 생성
 		try {
-			mdao.insertOrder(info.getUserId(), storeNum, isDelivery, totalPrice, creditCard);
+			mdao.insertOrder(info.getUserId(), storeNum, isDelivery, totalPrice, creditCard, tel, address, request);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -82,12 +91,9 @@ public class OrderServlet extends MyServlet {
 				e.printStackTrace();
 			}
 		}
-		//모든 주문 다 보여주기 시간순으로
-		List<AllOrderInfoDTO> myorders=mdao.allMyOrder();
-		req.setAttribute("AllOrders", myorders);
-		
-		String path = "/WEB-INF/views/order/orderResult.jsp";
-		forward(req, resp, path);
+		String cp = req.getContextPath();
+		resp.sendRedirect(cp + "/order/orderComplete.do");
+
 	}
 
 	private void order(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -96,6 +102,14 @@ public class OrderServlet extends MyServlet {
 		OrderDAO mdao = new OrderDAO();
 		String[] checkedMenu = req.getParameterValues("cbox");
 		int totalPrice = 0;
+		List<StoreDTO> allList = mdao.allStore();
+		List<StoreDTO> allList2 = mdao.allStore();
+		List<String> alladdress = new ArrayList<String>();// 모든 매장의 주소들
+		for (StoreDTO s : allList2) {
+			alladdress.add(s.getStoreAddress());
+		}
+		Iterator<StoreDTO> it = allList2.iterator();// ConcurrentModificationException막기위함
+
 		for (String m : checkedMenu) {
 			CartDTO cart = new CartDTO();
 			cart.setMenuNum(Integer.parseInt(m.split(",")[1]));
@@ -105,15 +119,43 @@ public class OrderServlet extends MyServlet {
 			cart.setPrice(menu.getMenuPrice() * Integer.parseInt(m.split(",")[2]));
 			list.add(cart);
 			totalPrice += menu.getMenuPrice() * Integer.parseInt(m.split(",")[2]);
-		}
-		List<StoreDTO> allList = mdao.allStore();
+			// 배달가능한 매장 리스트
+			List<StoreDTO> deliveryList = mdao.deliveryStore(cart.getMenuNum(), cart.getQuantity());
+			// 배달가능한 매장 주소들
+			List<String> storeaddress = new ArrayList<String>();
+			for (StoreDTO s : deliveryList) {
+				storeaddress.add(s.getStoreAddress());
+			}
 
+			for (String s : alladdress) {
+				if (!storeaddress.contains(s)) {// 모든 매장중에 배달 가능한 매장이 아니면 지우기
+					while (it.hasNext()) {// 값으로 넘겨야하는 배달가능한 모든 매장
+						StoreDTO dto = it.next();
+						if (dto.getStoreAddress().equals(s)) { // s는 배달가능한 매장에 포함 안된 매장주소
+							it.remove();
+							allList2.remove(dto);
+						}
+					}
+				}
+			}
+		}
+		req.setAttribute("allstorelist", allList);
 		req.setAttribute("cartlist", list);
 		req.setAttribute("totalPrice", totalPrice);
-		req.setAttribute("allstorelist", allList);
+		req.setAttribute("storelist", allList2);
 
 		String path = "/WEB-INF/views/order/order.jsp";
 		forward(req, resp, path);
+	}
+
+	private void orderComplete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 모든 주문 다 보여주기 시간순으로
+		OrderDAO mdao=new OrderDAO();
+		List<AllOrderInfoDTO> myorders = mdao.allMyOrder();
+		req.setAttribute("AllOrders", myorders);
+		String path = "/WEB-INF/views/order/orderResult.jsp";
+		forward(req, resp, path);
+
 	}
 
 	private void cartAdd(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

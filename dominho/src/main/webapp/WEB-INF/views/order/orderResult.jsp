@@ -10,19 +10,19 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 <body>
-주문완료
+주문이 완료되었습니다.
 <c:forEach var="order" items="${AllOrders}">
 <div style="border: 3px solid #FF8E21; border-radius: 10px;">
-${order.orderNum}
-${order.userId}
-${order.storeName}
-${order.orderDate}
-${order.isDelivery}
-${order.totalPrice}
-${order.cardNum}
-${order.menuName}
-${order.orderCount}
-${order.orderPrice}
+<div>${order.orderNum}</div>
+<div>${order.userId}</div>
+<div>${order.storeName}</div>
+<div>${order.orderDate}</div>
+<div>${order.isDelivery}</div>
+<div>${order.totalPrice}</div>
+<div>${order.cardNum}</div>
+<div>${order.menuName}</div>
+<div>${order.orderCount}</div>
+<div>${order.orderPrice}</div>
 </div>
 </c:forEach>
 

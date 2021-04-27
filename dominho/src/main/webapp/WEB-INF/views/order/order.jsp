@@ -94,22 +94,23 @@ $(document).ready(function() {
 				return false;
 			}
 			str = f.store2.value;
-			if (!str) {
+			if (str=='배달 매장 선택') {
 				alert("매장을 선택하세요 ");
 				f.tel.focus();
 				return false;
 			}
 		}
 
-		str = f.store1.value;
-		if (radioVal == '포장') {
-			if (!str) {
+		else if (radioVal == '포장') {
+			str = f.store1.value;
+			console.log(str);
+			if (str=='포장 매장 선택') {
 				alert("매장을 선택하세요 ");
 				f.tel.focus();
 				return false;
 			}
 		}
-		var radioVal = $('input[name="customRadioInline2"]:checked').val();
+		radioVal = $('input[name="customRadioInline2"]:checked').val();
 		if (radioVal == '카드결제') {
 			str = f.cardNum.value;
 			if (!str) {
@@ -147,7 +148,7 @@ main {
 		<h3>주문</h3>
 		<br>
 		<h4>주문 메뉴 정보</h4>
-		
+
 		<form name="orderForm" action="${pageContext.request.contextPath}/order/order_ok.do" method="post" onsubmit="return check();">
 			<c:forEach var="dto" items="${cartlist}">
 				<input type="hidden" name="menus" value="${dto.menuNum},${dto.quantity},${dto.price}">
@@ -171,7 +172,7 @@ main {
 			<br>
 			<div class="box">
 				<h4>연락처</h4>
-				<input class="form-control" type="text" name="tel" class="inputStyle" placeholder="핸드폰 번호를 숫자만 입력해주세요.">
+				<input class="form-control" type="text" name="tel" placeholder="핸드폰 번호를 숫자만 입력해주세요.">
 			</div>
 			<br>
 			<div id="forWrap" style="display: none;">
@@ -190,13 +191,13 @@ main {
 				<div class="box">
 					<h4>배달주소</h4>
 					<button type="button" class="btn" onclick="daumPostcode();">우편번호</button>
-					<input class="form-control" type="text" name="zip" id="zip" class="inputStyle" readonly="readonly" placeholder="우편번호">
+					<input class="form-control" type="text" name="zip" id="zip"  readonly="readonly" placeholder="우편번호">
 				</div>
 				<div class="box">
-					<input class="form-control" type="text" name="addr1" id="addr1" maxlength="50" class="inputStyle" placeholder="기본 주소" readonly="readonly">
+					<input class="form-control" type="text" name="addr1" id="addr1" maxlength="50" placeholder="기본 주소" readonly="readonly">
 				</div>
 				<div class="box">
-					<input class="form-control" type="text" name="addr2" id="addr2" maxlength="50" class="inputStyle" placeholder="상세 주소를 입력해주세요.">
+					<input class="form-control" type="text" name="addr2" id="addr2" maxlength="50" placeholder="상세 주소를 입력해주세요.">
 				</div>
 				<br>
 				<div class="box">
@@ -212,7 +213,7 @@ main {
 			<br>
 			<div class="box">
 				<h4>요청사항</h4>
-				<input class="form-control" type="text" name="userName" class="inputStyle" value="${dto.userName}" maxlength="100" placeholder="요청사항을 입력해주세요.">
+				<input class="form-control" type="text" name="requests" maxlength="100" placeholder="요청사항을 입력해주세요.">
 			</div>
 			<br>
 			<div class="box">
@@ -229,7 +230,7 @@ main {
 			</div>
 			<div class="prices">
 				<input type="hidden" value="${totalPrice}" name="totalPrice">
-				<div class="price" ></div>
+				<div class="price"></div>
 				<button type="submit" class="btn btn-danger btn-lg">주문완료하기</button>
 			</div>
 		</form>

@@ -154,13 +154,13 @@ public class OrderDAO {
 		}
 		return list;
 	}
-	public int insertOrder(String userId, int storeNum, String isDelivery, double totalPrice, String creditCard) throws SQLException {
+	public int insertOrder(String userId, int storeNum, String isDelivery, double totalPrice, String creditCard,String tel,String address,String request) throws SQLException {
 		int result = 0;
 		PreparedStatement pstmt = null;
 		String sql;
 
 		try {
-			sql = "insert into myorder(ordernum, userid, storenum, orderdate, isdelivery, totalprice, creditcardnum) values(myorder_seq.nextval,?,?,sysdate,?,?,?)";
+			sql = "insert into myorder(ordernum, userid, storenum, orderdate, isdelivery, totalprice, creditcardnum,tel,address,request) values(myorder_seq.nextval,?,?,sysdate,?,?,?,?,?,?)";
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setString(1,userId );
@@ -168,6 +168,9 @@ public class OrderDAO {
 			pstmt.setString(3,isDelivery );
 			pstmt.setDouble(4,totalPrice );
 			pstmt.setString(5,creditCard );
+			pstmt.setString(6,tel);
+			pstmt.setString(7,address);
+			pstmt.setString(8,request);
 			result = pstmt.executeUpdate();
 
 		} catch (Exception e) {
@@ -220,7 +223,7 @@ public class OrderDAO {
 		String sql;
 		try {
 			sql = "select m.ordernum, userid, s.storename, orderdate, isdelivery, totalprice, nvl(creditcardnum,'만나서결제') creditcardnum, menu.menuname, o.ordercount, o.orderprice from myorder m join store s on m.storenum=s.storenum join orderdetail o on m.ordernum=o.ordernum join menu on o.menunum=menu.menunum"
-					+ " order by m.ordernum ";
+					+ " order by m.ordernum desc ";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
@@ -237,6 +240,51 @@ public class OrderDAO {
 				dto.setOrderPrice(rs.getInt("orderprice"));
 				list.add(dto);
 				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+
+		}
+		return list;
+	}
+	public List<StoreDTO> deliveryStore(int menuNum, int quantity) {
+		List<StoreDTO> list = new ArrayList<StoreDTO>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			sql = "select s.storenum, storename, storetel, storeaddress, openinghours,closinghours,totalsales "
+					+ " from store s join menudetail m on s.storenum=m.storenum "
+					+ "	where m.menunum=? and m.count>=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, menuNum);
+			pstmt.setInt(2, quantity);
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				StoreDTO dto = new StoreDTO();
+				dto.setStoreNum(rs.getInt("storenum"));
+				dto.setStoreName(rs.getString("storename"));
+				dto.setStoreTel(rs.getString("storetel"));
+				dto.setStoreAddress(rs.getString("storeaddress"));
+				dto.setOpeningHours(rs.getString("openinghours"));
+				dto.setClosingHours(rs.getString("closinghours"));
+				dto.setTotalSales(rs.getInt("totalsales"));
+				list.add(dto);
 			}
 
 		} catch (Exception e) {
