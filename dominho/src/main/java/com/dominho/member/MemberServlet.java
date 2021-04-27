@@ -38,8 +38,8 @@ public class MemberServlet extends MyServlet {
 			pwdSubmit(req, resp);
 		} else if (uri.indexOf("update_ok.do") != -1) {
 			updateSubmit(req, resp);
-		} else if (uri.indexOf("userIdCheck.do") != -1) {
-			userIdCheck(req, resp);
+		} else if(uri.indexOf("delete_ok.do")!=-1) {
+			deleteSubmit(req, resp);
 		} else if (uri.indexOf("myOrderList.do") != -1) {
 			myOrderList(req, resp);
 		} else if (uri.indexOf("mypage") != -1) {
@@ -112,7 +112,7 @@ public class MemberServlet extends MyServlet {
 			dto.setUserId(req.getParameter("userId"));
 			dto.setUserPwd(req.getParameter("userPwd"));
 			dto.setUserName(req.getParameter("userName"));
-			dto.setEmail(req.getParameter("userEmail"));
+			dto.setEmail(req.getParameter("email"));
 			String birth = req.getParameter("birth").replaceAll("(\\.|\\-|\\/)", "");
 			dto.setBirth(birth);
 			dto.setTel(req.getParameter("tel"));
@@ -154,11 +154,6 @@ public class MemberServlet extends MyServlet {
 		}
 		
 		String mode=req.getParameter("mode");
-		if(mode.equals("update")) {
-			req.setAttribute("title", "회원 정보 수정");
-		} else {
-			req.setAttribute("title", "회원 탈퇴");
-		}
 		req.setAttribute("mode", mode);
 		
 		forward(req, resp, "/WEB-INF/views/member/pwd.jsp");
@@ -189,13 +184,10 @@ public class MemberServlet extends MyServlet {
 			if(! dto.getUserPwd().equals(userPwd)) {
 				if(mode.equals("update")) {
 					req.setAttribute("title", "회원 정보 수정");
-				} 
-//				else {
-//					req.setAttribute("title", "회원 탈퇴");
-//				}
+				}
 		
 				req.setAttribute("mode", mode);
-				req.setAttribute("msg", "비밀번호가 일치하지 않습니다");
+				req.setAttribute("message", "비밀번호가 일치하지 않습니다");
 				forward(req, resp, "/WEB-INF/views/member/pwd.jsp");
 				return;
 			}
@@ -213,7 +205,7 @@ public class MemberServlet extends MyServlet {
 			
 			// 회원정보수정 - 회원수정폼으로 이동
 //			req.setAttribute("title", "회원 정보 수정");
-//			req.setAttribute("dto", dto);
+			req.setAttribute("dto", dto);
 			req.setAttribute("mode", "update");
 			forward(req, resp, "/WEB-INF/views/mypage/myPage.jsp");
 			return;
@@ -221,17 +213,69 @@ public class MemberServlet extends MyServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		resp.sendRedirect(cp);
 	}
 
 	private void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+		HttpSession session = req.getSession();
+		String cp = req.getContextPath();
+		MemberDAO dao = new MemberDAO();
+		
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			if(info ==null) {
+				resp.sendRedirect(cp+"/member/login.do");
+				return;
+			}
+			
+			MemberDTO dto = new MemberDTO();
+			
+			dto.setUserPwd(req.getParameter("userPwd"));
+			dto.setUserName(req.getParameter("userName"));
+			dto.setEmail(req.getParameter("email"));
+			dto.setTel(req.getParameter("tel"));
+			dto.setZip(req.getParameter("zip"));
+			dto.setAddr1(req.getParameter("address1"));
+			dto.setAddr2(req.getParameter("address2"));
+			dto.setUserId(info.getUserId());
+			
+			dao.updateMember(dto);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		resp.sendRedirect(cp);
 	}
-
-	private void userIdCheck(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 아이디 중복 검사
-
+	
+	private void deleteSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		String cp = req.getContextPath();
+		MemberDAO dao = new MemberDAO();
+		
+		try {
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			if(info ==null) {
+				resp.sendRedirect(cp+"/member/login.do");
+				return;
+			}
+			
+			MemberDTO dto=dao.readMember(info.getUserId());
+			if(dto==null){ 
+				session.invalidate();
+				resp.sendRedirect(cp);
+				return;
+			}
+			
+			String userId=dto.getUserId();
+			dao.deleteMember(userId);
+			session.removeAttribute("member");
+			session.invalidate();
+			
+			resp.sendRedirect(cp);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	private void mypage(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

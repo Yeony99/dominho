@@ -34,7 +34,6 @@ public class MemberDAO {
 				dto.setAddr1(rs.getString("address1"));
 				dto.setAddr2(rs.getString("address2"));
 				dto.setJoinedDate(rs.getString("joinedDate"));
-				
 
 			}
 		} catch (SQLException e) {
@@ -105,14 +104,62 @@ public class MemberDAO {
 	}
 
 	public int updateMember(MemberDTO dto) throws SQLException {
-		int result = 0;
+		int result=0;
+		PreparedStatement pstmt=null;
+		String sql;
+		
+		try {
+			sql = "UPDATE member SET userPwd=?, userName=?, email=?, tel=?, zip=?, Address1=?, address2=? WHERE userId=?";
+			pstmt=conn.prepareStatement(sql);
+			
+			pstmt.setString(1, dto.getUserPwd());
+			pstmt.setString(2, dto.getUserName());
+			pstmt.setString(3, dto.getEmail());
+			pstmt.setString(4, dto.getTel());
+			pstmt.setString(5, dto.getZip());
+			pstmt.setString(6, dto.getAddr1());
+			pstmt.setString(7, dto.getAddr2());
+			pstmt.setString(8, dto.getUserId());
+	
+			result=pstmt.executeUpdate();
 
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
 		return result;
 	}
 
 	public int deleteMember(String userId) throws SQLException {
-		int result = 0;
-
+		int result=0;
+		PreparedStatement pstmt=null;
+		String sql;
+		
+		try {			
+			sql="DELETE FROM  member WHERE userId=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, userId);
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
 		return result;
 	}
 

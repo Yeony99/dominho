@@ -184,11 +184,11 @@ function isValidDateFormat(data){
 		}
 		f.userName.value = str;
 		
-		str = f.userEmail.value;
+		str = f.email.value;
 		str = str.trim();
 		if (!str) {
 			alert("이메일을 입력하세요. ");
-			f.userEmail.focus();
+			f.email.focus();
 			return;
 		}
 
@@ -229,13 +229,8 @@ function isValidDateFormat(data){
 
 		var str = f.selectEmail.value;
 		if (str != "direct") {
-			f.email2.value = str;
-			f.email2.readOnly = true;
-			f.email1.focus();
-		} else {
-			f.email2.value = "";
-			f.email2.readOnly = false;
-			f.email1.focus();
+			f.email.value = str;
+			f.email.focus();
 		}
 	}
 
@@ -316,7 +311,7 @@ function isValidDateFormat(data){
 		</div>
 		<div class="box">
 			<h4>이메일 * </h4>
-			<br> <input type="email" name="userEmail" class="inputStyle"
+			<br> <input type="email" name="email" class="inputStyle"
 				value="${dto.email}" placeholder="이메일을 입력해주세요.">
 		</div>
 		<div class="box">
@@ -336,12 +331,12 @@ function isValidDateFormat(data){
 			<button type="button" class="btn" onclick="daumPostcode();">우편번호</button>
 		</div>
 		<div class="box">
-			<input type="text" name="addr1" id="addr1" value="${dto.address1}"
+			<input type="text" name="address1" id="addr1" value="${dto.addr1}"
 				maxlength="50" class="inputStyle" placeholder="기본 주소"
 				readonly="readonly">
 		</div>
 		<div class="box">
-			<input type="text" name="addr2" id="addr2" value="${dto.address2}"
+			<input type="text" name="address2" id="addr2" value="${dto.addr2}"
 				maxlength="50" class="inputStyle" placeholder="상세 주소를 입력해주세요.">
 		</div>
 		<div class="box">
