@@ -306,4 +306,31 @@ public class OrderDAO {
 		}
 		return list;
 	}
+	public int insertCart(int menuNum, String memberId, int count) throws SQLException {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			sql = "insert into cart(cartId, menuNum, memberId, quantity, created) values(cart_seq.nextval,?,?,?,sysdate)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, menuNum);
+			pstmt.setString(2, memberId);
+			pstmt.setInt(3, count);
+			result = pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e) {
+
+				}
+			}
+		}
+		return result;
+	}
 }

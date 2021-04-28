@@ -33,7 +33,7 @@ main h2 {
 	justify-content: space-around;
 	align-items: center;
 	margin-bottom: 10px;
-	border-radius: 10px;
+	border-radius: 20px;
 }
 
 .prices {
@@ -93,7 +93,7 @@ h3 {
 		<h3>장바구니</h3>
 
 
-		<h2>${dataCount==0?"장바구니가 비었습니다.":"장바구니 목록"}</h2>
+		<h2>${dataCount==0?"장바구니가 비었습니다":"장바구니 목록"}</h2>
 		<hr>
 		<form name="form" action="${pageContext.request.contextPath}/order/order.do" method="post" onsubmit="return sendOrder();">
 			<c:forEach var="dto" items="${cartlist}">

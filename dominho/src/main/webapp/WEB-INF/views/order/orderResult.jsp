@@ -44,8 +44,8 @@ h2 {
 	<br>
 	<br>
 	
-	<c:if test="${fn:length(AllOrders) > 0}"><h2>주문이 완료되었습니다.</h2></c:if>
-	<c:if test="${fn:length(AllOrders) == 0}"><h2>최근 주문 내역이 없습니다.</h2></c:if>
+	<c:if test="${fn:length(AllOrders) > 0}"><h2>주문이 완료되었습니다</h2></c:if>
+	<c:if test="${fn:length(AllOrders) == 0}"><h2>최근 주문 내역이 없습니다</h2></c:if>
 	<hr>
 	<c:forEach var="order" items="${AllOrders}">
 		<div class="container">

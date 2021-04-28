@@ -155,7 +155,7 @@ main h2 {
 	justify-content: space-around;
 	align-items: center;
 	margin-bottom: 10px;
-	border-radius: 10px;
+	border-radius: 20px;
 }
 
 .prices {
@@ -165,7 +165,7 @@ main h2 {
 	justify-content: space-around;
 	align-items: center;
 	margin-bottom: 10px;
-	border-radius: 10px;
+	border-radius: 20px;
 	background: linear-gradient(125deg, #FCD6B8, #FF8E21, #CA3D2A);
 	color: white;
 	border: none;
@@ -212,7 +212,7 @@ main h2 {
 					<h4>포장매장</h4>
 					<select name="store1" class="custom-select custom-select-lg mb-3">
 						<option selected>포장 매장 선택</option>
-						<c:forEach var="store" items="${allstorelist}">
+						<c:forEach var="store" items="${storelist}">
 							<option value="${store.storeNum}">${store.storeName}(${store.storeAddress})</option>
 						</c:forEach>
 					</select>
