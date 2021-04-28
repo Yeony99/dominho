@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import com.util.MyServlet;
 
-@WebServlet(urlPatterns = { "/member/*", "/mypage/*" })
+@WebServlet(urlPatterns = { "/member/*", "/mypage/*", "/admin/adminMain"})
 public class MemberServlet extends MyServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -44,6 +44,8 @@ public class MemberServlet extends MyServlet {
 			myOrderList(req, resp);
 		} else if (uri.indexOf("mypage") != -1) {
 			mypage(req, resp);
+		} else if(uri.indexOf("adminMain")!=-1) {
+			adminMain(req, resp);
 		}
 	}
 
@@ -287,5 +289,11 @@ public class MemberServlet extends MyServlet {
 		req.setAttribute("mode", "myOrderList");
 		forward(req, resp, "/WEB-INF/views/mypage/myOrderList.jsp");
 	}
+	
+	private void adminMain(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.setAttribute("mode", "adminMain");
+		forward(req, resp, "/WEB-INF/views/admin/adminMain.jsp");
+	}
+	
 
 }
