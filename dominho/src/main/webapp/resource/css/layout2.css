@@ -83,10 +83,6 @@ ul.nav>li:hover .submenu{
 .submenu>li{
 	background: white;
 }
-.submenu>li>span>a:hover{
-	color:#084B27;
-	font-weight: 700;
-}
 
 #container {
 	width: 100%;

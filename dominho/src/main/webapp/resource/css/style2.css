@@ -33,6 +33,18 @@
 .footer-info p {
 	font-size: 14px;
 }
+.submenu>li>span>a:hover{
+	color: #f06292;
+}
+a:visited {
+ 	color: #7e57c2;
+}
+a:link {
+	color: #212121;
+}
+a:hover {
+	color: #f06292;
+}
 
 @font-face {
     font-family: 'KOTRA_GOTHIC';
