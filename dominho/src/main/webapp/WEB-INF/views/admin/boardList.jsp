@@ -28,7 +28,7 @@
 }
 
 .container {
-	padding: 30px 0px 0px 30px;
+	padding: 30px 0px 0px 80px;
 }
 
 .allDataCount {
@@ -84,8 +84,8 @@
 	color: white;
 	border: 1px solid #ddd;
 	cursor: pointer;
-	margin-left: 1130px;
-	margin-bottom: 10px;
+	margin-left: 1040px;
+	margin-bottom: 30px;
 }
 .btnDelete{
 	width: 50px;
@@ -116,7 +116,7 @@ a:hover {
 </div>
 
 <div class="container">
-	<div class="body_con" style="width: 1200px;">
+	<div class="body_con" style="width: 1100px;">
 		<div class="body_title">
 			<span>공지사항</span>
 		</div>
@@ -188,11 +188,11 @@ a:hover {
 				</tr>
 			</table>
 			
-					<span>
-						<c:if test="${sessionScope.member.userId=='admin'}">
-							<button type="button" class="btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/admin/board_create';">등록</button>
-						</c:if>
-					</span>			
+			<span>
+				<c:if test="${sessionScope.member.userId=='admin'}">
+					<button type="button" class="btnCreate" onclick="javascript:location.href='${pageContext.request.contextPath}/admin/board_create';">등록</button>
+				</c:if>
+			</span>			
 			
 
 		

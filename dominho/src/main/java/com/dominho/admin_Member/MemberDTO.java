@@ -1,7 +1,9 @@
-package com.dominho.admin;
+package com.dominho.admin_Member;
 
 public class MemberDTO {
+	private int listNum;
 	private String userId;
+	private String userPwd;
 	private String userName;
 	private String email;
 	private String tel;
@@ -12,6 +14,12 @@ public class MemberDTO {
 	private String joinedDate;
 	private String gender;
 	
+	public int getListNum() {
+		return listNum;
+	}
+	public void setListNum(int listNum) {
+		this.listNum = listNum;
+	}
 	public String getUserId() {
 		return userId;
 	}
@@ -71,6 +79,12 @@ public class MemberDTO {
 	}
 	public void setGender(String gender) {
 		this.gender = gender;
+	}
+	public String getUserPwd() {
+		return userPwd;
+	}
+	public void setUserPwd(String userPwd) {
+		this.userPwd = userPwd;
 	}
 	
 	

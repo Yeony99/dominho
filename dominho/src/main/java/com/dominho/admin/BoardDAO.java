@@ -280,6 +280,7 @@ public class BoardDAO {
 				dto.setPostNum(rs.getInt("postNum"));
 				dto.setMemberid(rs.getString("memberid"));
 				dto.setSubject(rs.getString("subject"));
+				dto.setContent(rs.getString("content"));
 				dto.setHitCount(rs.getInt("hitCount"));
 				dto.setCreated(rs.getString("created"));
 				
@@ -574,7 +575,7 @@ public class BoardDAO {
 				BoardDTO dto = new BoardDTO();
 				
 				dto.setFileNum(rs.getInt("fileNum"));
-				dto.setPostNum(rs.getInt("postNum"));
+				dto.setPostNum(rs.getInt("num"));
 				dto.setSaveFilename(rs.getString("saveFilename"));
 				dto.setOriginalFilename(rs.getString("originalFilename"));
 				list.add(dto);
@@ -615,7 +616,7 @@ public class BoardDAO {
 				dto = new BoardDTO();
 				
 				dto.setFileNum(rs.getInt("fileNum"));
-				dto.setPostNum(rs.getInt("postNum"));
+				dto.setPostNum(rs.getInt("num"));
 				dto.setSaveFilename(rs.getString("saveFilename"));
 				dto.setOriginalFilename(rs.getString("originalFilename"));
 				

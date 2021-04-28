@@ -128,7 +128,7 @@ function sendBoard() {
 					
 					<c:if test="${mode=='update'}">
 						<c:forEach var="vo" items="${listFile}">
-							<tr align="left" style="border-bottom: 1px solid #ddd">
+							<tr align="left" style="border-bottom: 1px solid #ddd" height="80px;">
 								<td width="100" style="text-align: center;">첨부된 파일</td>
 								<td style="padding-left: 10px;">
 									<a href="javascript:deleteFile('${vo.fileNum}');"><i class="far fa-trash-alt"></i></a>

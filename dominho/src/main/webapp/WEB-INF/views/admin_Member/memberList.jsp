@@ -27,7 +27,7 @@ function listSearch() {
 }
 
 .container {
-	padding: 30px 0px 0px 30px;
+	padding: 30px 0px 0px 110px;
 }
 .allDataCount {
 	width: 100%;
@@ -70,7 +70,7 @@ function listSearch() {
 </div>
 
 <div class="container">
-	<div class="body_con" style="width: 1200px;">
+	<div class="body_con" style="width: 800px;">
 		<div class="body_title">
 			<span>고객정보</span>
 		</div>
@@ -79,7 +79,10 @@ function listSearch() {
 				<tr>
 					<td align="center" style=" width:100%; border-top: 2px solid #111;">
 					<form name="listSearchForm" action="${pageContext.request.contextPath}/admin/memberList" method="post">
-						<span>이름검색</span>
+						<select name="condition" class="selectField">
+							<option value="userId" ${condition=="userId"?"selected='selected'":""}>아이디</option>
+				            <option value="userName" ${condition=="userName"?"selected='selected'":"" }>이름</option>			       						
+						</select>
 						<div class="boxTFdiv">
 						<input type="text" name="keyword" class="boxTF" value="${keyword}">
 						<button type="button" class="btnSearch" onclick="listSearch()"><img alt="" src="${pageContext.request.contextPath}/resource/images/notice_search.png" style="padding-top: 5px;"></button>
@@ -101,39 +104,33 @@ function listSearch() {
 			
 			<table style="width: 100%; margin: 0px auto; border-spacing: 0px; border-collapse: collapse;">
 				<tr align="center" height="55">
-					<th width="120">번호</th>
-					<th width="180">아이디</th>
-					<th width="250">이름</th>
-					<th width="325">연락처</th>
+					<th width="150">아이디</th>
+					<th width="150">이름</th>
+					<th width="250">연락처</th>
 					<th>E-mail</th>
 				</tr>
 				
 				<c:forEach var="dto" items="${listMember}">
 					<tr align="center" height="55" style="border-bottom: 1px solid #ddd;">
-						<td align="left" style="padding: 20px 0px 20px 10px;">
-							<a href="${detailUrl}">${dto.userId}</a>
-						</td>
-						<td>{dto.userName}</td>						
-						<td>${dto.tel}</td>
-						<td>${dto.birth}</td>
-						<td>${dto.email}</td>						
+						<td width="150">{dto.userId}</td>						
+						<td align="left" style="padding: 20px 0px 20px 10px;"> <a href="${detailUrl}">${dto.userName}</a></td>
+						<td width="250">${dto.tel}</td>
+						<td width="250">${dto.email}</td>
+					</tr>					
 				</c:forEach>
-				
+
 				<c:forEach var="dto" items="${list}">
 					<tr align="center" height="55" style="border-bottom: 1px solid #ddd;">
-							<td>${dto.userId}</td>
-							<td align="left" style="padding-left: 10px;">
-								<a href="${detailUrl}">${dto.userName}</a>
-							</td>
-							<td>${dto.tel}</td>
-							<td>${dto.birth}</td>
-							<td>${dto.email}</td>						
+						<td>${dto.userId}</td>
+						<td align="left" style="text-align: center;"><a href="${detailUrl}">${dto.userName}</a></td>
+						<td>${dto.tel}</td>
+						<td>${dto.birth}</td>
+						<td>${dto.email}</td>
 					</tr>
 				</c:forEach>
 			</table>
 		</form>
 		
-			
 		</div>
 	</div>
 </div>
