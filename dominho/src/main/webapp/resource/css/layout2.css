@@ -7,8 +7,14 @@
 
 body {
 	margin: 0;
+	z-index: 1;
+	position:relative
 }
 
+header {
+	z-index:2;
+	position:relative;
+}
 
 .header-top {
 	width:100%;
@@ -60,13 +66,26 @@ ul.nav>li a{
 }
 
 ul.nav>li >ul.submenu {
+	margin:0;
+	text-decoration:none;
+	width:100px;
+	list-style:none;
+	font-size:15px;
 	display: none;
-	position: relative;
+	z-index: 999;
 }
 
-ul.nav>li >ul.submenu:hover {
-	display: inline-block;
-	position: absolute;
+ul.nav>li:hover .submenu{
+	display:inline;
+	position: relative;
+	z-index: 999;
+}
+.submenu>li{
+	background: white;
+}
+.submenu>li>span>a:hover{
+	color:#084B27;
+	font-weight: 700;
 }
 
 #container {
