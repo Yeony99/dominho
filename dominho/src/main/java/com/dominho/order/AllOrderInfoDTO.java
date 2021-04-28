@@ -8,9 +8,7 @@ public class AllOrderInfoDTO {
 	private String isDelivery;
 	private int totalPrice;
 	private String cardNum;
-	private String menuName;
-	private int orderCount;
-	private int orderPrice;
+	
 	public int getOrderNum() {
 		return orderNum;
 	}
@@ -53,23 +51,6 @@ public class AllOrderInfoDTO {
 	public void setCardNum(String cardNum) {
 		this.cardNum = cardNum;
 	}
-	public String getMenuName() {
-		return menuName;
-	}
-	public void setMenuName(String menuName) {
-		this.menuName = menuName;
-	}
-	public int getOrderCount() {
-		return orderCount;
-	}
-	public void setOrderCount(int orderCount) {
-		this.orderCount = orderCount;
-	}
-	public int getOrderPrice() {
-		return orderPrice;
-	}
-	public void setOrderPrice(int orderPrice) {
-		this.orderPrice = orderPrice;
-	}
+	
 	
 }

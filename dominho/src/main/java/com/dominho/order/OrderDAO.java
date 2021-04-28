@@ -216,15 +216,17 @@ public class OrderDAO {
 		}
 		return result;
 	}
-	public List<AllOrderInfoDTO> allMyOrder() {
+	public List<AllOrderInfoDTO> recentMyOrder(String userId) {
 		List<AllOrderInfoDTO> list = new ArrayList<AllOrderInfoDTO>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
 		try {
-			sql = "select m.ordernum, userid, s.storename, orderdate, isdelivery, totalprice, nvl(creditcardnum,'만나서결제') creditcardnum, menu.menuname, o.ordercount, o.orderprice from myorder m join store s on m.storenum=s.storenum join orderdetail o on m.ordernum=o.ordernum join menu on o.menunum=menu.menunum"
-					+ " order by m.ordernum desc ";
+			sql = "select ordernum, userId, storename, orderdate, isdelivery, totalprice, creditcardnum from(select m.ordernum, userid, s.storename, orderdate, isdelivery, totalprice, nvl(creditcardnum,'만나서결제') creditcardnum from myorder m join store s on m.storenum=s.storenum "
+					+ " where userId=?"
+					+ "	 order by m.ordernum desc) where rownum=1 ";
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userId);
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				AllOrderInfoDTO dto = new AllOrderInfoDTO();
@@ -235,9 +237,7 @@ public class OrderDAO {
 				dto.setIsDelivery(rs.getString("isDelivery"));
 				dto.setTotalPrice(rs.getInt("totalPrice"));
 				dto.setCardNum(rs.getString("creditcardnum"));
-				dto.setMenuName(rs.getString("menuname"));
-				dto.setOrderCount(rs.getInt("orderCount"));
-				dto.setOrderPrice(rs.getInt("orderprice"));
+				
 				list.add(dto);
 				
 			}
@@ -305,5 +305,32 @@ public class OrderDAO {
 
 		}
 		return list;
+	}
+	public int insertCart(int menuNum, String memberId, int count) throws SQLException {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+
+		try {
+			sql = "insert into cart(cartId, menuNum, memberId, quantity, created) values(cart_seq.nextval,?,?,?,sysdate)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, menuNum);
+			pstmt.setString(2, memberId);
+			pstmt.setInt(3, count);
+			result = pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e) {
+
+				}
+			}
+		}
+		return result;
 	}
 }

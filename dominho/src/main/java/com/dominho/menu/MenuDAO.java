@@ -20,8 +20,8 @@ public class MenuDAO {
 		
 		try {
 			
-			sql="INSERT INTO menu(menuNum, menuName, menuExplain, menuPrice, imageFilename, menuType "
-					+ "VALUES(menu_seq.NEXTVAL, ?, ?, ?, ?, ?, )";
+			sql="INSERT INTO menu(menuNum, menuName, menuExplain, menuPrice, imageFilename, menuType) "
+					+ " VALUES(menu_seq.NEXTVAL, ?, ?, ?, ?, ?)";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getMenuName());
@@ -52,7 +52,7 @@ public class MenuDAO {
 		String sql;
 		
 		try {
-			sql = "SELECT NVL(COUNT(*), 0) FROM menu";
+			sql = "SELECT COUNT(*) FROM menu";
 			pstmt = conn.prepareStatement(sql);
 			
 			rs = pstmt.executeQuery();
@@ -85,11 +85,18 @@ public class MenuDAO {
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
 		
-		try {
-			sb.append("SELECT m.menuNum, menuName, menuPrice, imageFilename, menuType, count ");
-			sb.append( "FROM menu m JOIN menuDetail md ON m.menuNum = md.menuNum ");
-			sb.append(" ORDER BY menuNum DESC");
-			sb.append("OFFSET ? ROWS FETCH FIRST ? ROWS ONLY");
+		try {			
+			/*
+			sb.append(" SELECT menuNum, menuName, menuPrice, imageFileName, menuType ");
+			sb.append(" FROM menu ");
+			sb.append(" ORDER BY menuNum DESC ");
+			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
+			*/
+			sb.append(" SELECT menuName, menuPrice, imageFileName, menuType, md.storeNum ");
+			sb.append(" FROM  menu m ");
+			sb.append(" LEFT OUTER JOIN menudetail md ON m.menunum = md.menunum ");
+			sb.append(" ORDER BY storeNum, m.menuNum DESC ");
+			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.setInt(1, offset);
@@ -99,13 +106,14 @@ public class MenuDAO {
 			
 			while(rs.next()) {
 				MenuDTO dto = new MenuDTO();
-				MenuDetailDTO mddto = new MenuDetailDTO();
-				dto.setMenuNum(rs.getInt("menuNum"));
+				//MenuDetailDTO mddto = new MenuDetailDTO();
+				//dto.setMenuNum(rs.getInt("menuNum"));
 				dto.setMenuName(rs.getString("menuName"));
 				dto.setMenuPrice(rs.getInt("menuPrice"));
 				dto.setImageFilename(rs.getString("imageFilename"));
 				dto.setMenuType(rs.getString("menuType"));
-				mddto.setCount(rs.getInt("count"));
+				//mddto.setCount(rs.getInt("count"));
+				dto.setStoreNum(rs.getInt("storeNum"));
 				
 				list.add(dto);
 				
@@ -179,16 +187,18 @@ public class MenuDAO {
 		String sql;
 		
 		try {
-			sql = "SELECT m.menuNum, menuName, menuPrice, imageFilename, menuType, count "
+			sql = "SELECT m.menuNum, m.menuName, m.menuPrice, m.imageFileName, m.menuType, c.memberId "
 					+ " FROM menu m "
-					+ " JOIN menuDetail md ON m.menuNum = md.menuNum ";
-			if(condition.equals("menuName")) {
-				sql += " WHERE INSTR(menuName, ?) >= 1";
+					+ " JOIN cart c ON m.menuNum=c.menuNum ";
+			if(condition.equals("all")) {
+				sql += " WHERE INSTR(menuName, ?) >= 1 OR INSTR(menuType, ?) >= 1 ";
 			} else if(condition.equals("menuType")) {
-				sql += "WHERE(menuType, ?) >= 1";
+				sql += " WHERE(menuType, ?) >= 1";
+			} else {
+				sql += " WHERE INSTR("+condition+", ?) >= 1 ";
 			}
 			sql += " ORDER BY menuNum DESC "
-					+ "OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ";
+					+ " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, keyword);
@@ -238,7 +248,7 @@ public class MenuDAO {
 			sql = "SELECT m.menuNum, menuName, menuExplain, menuPrice, imageFileName, count "
 					+ " FROM menu m "
 					+ " JOIN menuDetail md ON m.menuNum = md.menuNum "
-					+ " WHERE menuNum=?";
+					+ " WHERE m.menuNum=?";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, menuNum);
@@ -247,12 +257,12 @@ public class MenuDAO {
 			if(rs.next()) {
 				dto = new MenuDTO();
 				mddto = new MenuDetailDTO();
+				
 				dto.setMenuNum(rs.getInt("menuNum"));
+				dto.setMenuName(rs.getString("menuName"));
 				dto.setMenuExplain(rs.getString("menuExplain"));
 				dto.setMenuPrice(rs.getInt("menuPrice"));
 				dto.setImageFilename(rs.getString("imageFileName"));
-				//dto.setMenuType(rs.getString("menuType"));
-				dto.setMenuName(rs.getString("menuName"));
 				mddto.setCount(rs.getInt("count"));
 				
 			}
@@ -287,7 +297,7 @@ public class MenuDAO {
 			sql = "UPDATE menu SET menuName=?, menuExplain=?, menuPrice=? "
 					+ " , imageFileName=?, menuType=?, count=? "
 					+ " FROM cart c JOIN menuDetail md ON c.menuNum = md.menuNum "
-					+ " WHERE menuNum=?, userId = ? ";
+					+ " WHERE menuNum=?, memberId = ? ";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getMenuName());
@@ -297,7 +307,7 @@ public class MenuDAO {
 			pstmt.setString(5, dto.getMenuType());
 			pstmt.setInt(6, mddto.getCount());
 			pstmt.setInt(7, dto.getMenuNum());
-			pstmt.setString(8, dto.getUserId());
+			pstmt.setString(8, dto.getMemberId());
 			
 			result = pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -322,9 +332,9 @@ public class MenuDAO {
 		
 		try {
 			sql = "DELETE FROM menu "
-					+ "FROM menu m INNER JOIN cart c "
-					+ "ON c.menuNum = m.menuNum "
-					+ "WHERE menuNum=? AND c.userId='admin'";
+					+ " FROM menu m INNER JOIN cart c "
+					+ " ON c.menuNum = m.menuNum "
+					+ " WHERE menuNum=? AND c.memberId='admin'";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, menuNum);
@@ -353,8 +363,8 @@ public class MenuDAO {
 		
 		try {
 			sql = "UPDATE menu SET md.menuNum = m.menuNum, count=? "
-					+ "FROM menu m JOIN menuDetail md "
-					+ "ON m.menuNum = md.menuNum WHERE menuNum=?";
+					+ " FROM menu m JOIN menuDetail md "
+					+ " ON m.menuNum = md.menuNum WHERE menuNum=?";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, mddto.getCount());

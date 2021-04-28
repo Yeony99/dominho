@@ -2,6 +2,8 @@
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -138,6 +140,36 @@ main {
 	width: 80%;
 	margin: 0 auto;
 }
+
+main h2 {
+	text-align: center;
+	color: #CA3D2A;
+	font-weight: bold;
+}
+
+.box1 {
+	border: 3px solid #0E191A;
+	width: 100%;
+	height: auto;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	margin-bottom: 10px;
+	border-radius: 20px;
+}
+
+.prices {
+	width: 100%;
+	height: auto;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	margin-bottom: 10px;
+	border-radius: 20px;
+	background: linear-gradient(125deg, #FCD6B8, #FF8E21, #CA3D2A);
+	color: white;
+	border: none;
+}
 </style>
 </head>
 <body>
@@ -147,12 +179,12 @@ main {
 	<main>
 		<h3>주문</h3>
 		<br>
-		<h4>주문 메뉴 정보</h4>
-
+		<h2>주문 메뉴 정보</h2>
+		<hr>
 		<form name="orderForm" action="${pageContext.request.contextPath}/order/order_ok.do" method="post" onsubmit="return check();">
 			<c:forEach var="dto" items="${cartlist}">
 				<input type="hidden" name="menus" value="${dto.menuNum},${dto.quantity},${dto.price}">
-				<div class="box" style="border: 3px solid #FF8E21; border-radius: 10px;">
+				<div class="box1">
 					<img src="${pageContext.request.contextPath}/resource/images/dominho_logo.svg" alt="Card image cap" width="130px" height="130px">
 					<p>${dto.menuName}×${dto.quantity}</p>
 					<p>총 ${dto.price}원</p>
@@ -180,7 +212,7 @@ main {
 					<h4>포장매장</h4>
 					<select name="store1" class="custom-select custom-select-lg mb-3">
 						<option selected>포장 매장 선택</option>
-						<c:forEach var="store" items="${allstorelist}">
+						<c:forEach var="store" items="${storelist}">
 							<option value="${store.storeNum}">${store.storeName}(${store.storeAddress})</option>
 						</c:forEach>
 					</select>
@@ -191,7 +223,7 @@ main {
 				<div class="box">
 					<h4>배달주소</h4>
 					<button type="button" class="btn" onclick="daumPostcode();">우편번호</button>
-					<input class="form-control" type="text" name="zip" id="zip"  readonly="readonly" placeholder="우편번호">
+					<input class="form-control" type="text" name="zip" id="zip" readonly="readonly" placeholder="우편번호">
 				</div>
 				<div class="box">
 					<input class="form-control" type="text" name="addr1" id="addr1" maxlength="50" placeholder="기본 주소" readonly="readonly">
@@ -228,11 +260,17 @@ main {
 					<label class="custom-control-label" for="customRadioInline4">만나서 결제</label>
 				</div>
 			</div>
-			<div class="prices">
-				<input type="hidden" value="${totalPrice}" name="totalPrice">
-				<div class="price"></div>
-				<button type="submit" class="btn btn-danger btn-lg">주문완료하기</button>
-			</div>
+			<br>
+			<c:if test="${fn:length(cartlist) > 0}">
+
+				<div class="prices">
+					<input type="hidden" value="${totalPrice}" name="totalPrice">
+					<button type="submit" class="btn btn-danger btn-lg">주문완료하기</button>
+					<div class="price"></div>
+				</div>
+			</c:if>
+
+
 		</form>
 
 

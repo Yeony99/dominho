@@ -43,7 +43,7 @@
 
 <div class="menu">
 	<ul class="nav">
-		<li><span class="un"><a href="#">메뉴</a></span></li>
+		<li><span class="un"><a href="${pageContext.request.contextPath}/menu/menuList.do">메뉴</a></span></li>
 		<li><span class="un"><a href="#">매장</a></span></li>
 		<li><span class="un"><a href="${pageContext.request.contextPath}/admin/boardList">공지사항</a></span></li>
 
