@@ -37,7 +37,7 @@
                     &nbsp;|&nbsp;
                     <c:choose>
                     <c:when test="${sessionScope.member.userId=='admin'}"> 
-                                       <a href="${pageContext.request.contextPath}/WEB-INF/views/admin/adminMain.jsp">관리페이지</a>
+                                       <a href="${pageContext.request.contextPath}/admin/adminMain">관리페이지</a>
 					</c:when>
 					<c:otherwise>
                    <a href="${pageContext.request.contextPath}/mypage/myOrderList.do">마이페이지</a>
