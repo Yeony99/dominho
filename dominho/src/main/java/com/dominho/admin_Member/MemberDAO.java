@@ -52,7 +52,7 @@ public class MemberDAO {
 		ResultSet rs = null;
 		
 		try {
-			sql="SELECT NVL(COUNT(*),0) FROM member WHERE INSTR(\" +condition+ \",?) >=1";
+			sql="SELECT NVL(COUNT(*),0) FROM member WHERE INSTR("+condition+",?) >=1";
 			
 			pstmt =conn.prepareStatement(sql);
 			pstmt.setString(1, keyword);
@@ -136,7 +136,7 @@ public class MemberDAO {
 		
 		try {
 			sb.append("SELECT userId, userName, tel, email ");
-			sb.append(" FROM member WHERE INSTR(\"+condition+\", ?) >= 1");
+			sb.append(" FROM member WHERE INSTR("+condition+", ?) >= 1");
 			sb.append(" ORDER BY userName DESC ");
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY");
 			
@@ -184,7 +184,7 @@ public class MemberDAO {
 		ResultSet rs = null;
 		String sql;
 		
-		sql="SELECT userName, userId, userPwd, tel, email, birth, zip, addr1, addr2 joinedDate FROM member WHERE userId=?";
+		sql="SELECT userName, userId, userPwd, tel, email, TO_CHAR(birth, 'YYYY-MM-DD') birth, zip, address1, address2, TO_CHAR(joinedDate, 'YYYY-MM-DD') joinedDate FROM member WHERE userId=?";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -202,8 +202,8 @@ public class MemberDAO {
 				dto.setEmail(rs.getString("email"));
 				dto.setBirth(rs.getString("birth"));
 				dto.setZip(rs.getString("zip"));
-				dto.setAddr1(rs.getString("addr1"));
-				dto.setAddr2(rs.getString("addr2"));
+				dto.setAddress1(rs.getString("address1"));
+				dto.setAddress2(rs.getString("address2"));
 				dto.setJoinedDate(rs.getString("joinedDate"));
 				
 			}

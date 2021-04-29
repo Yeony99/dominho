@@ -98,9 +98,7 @@
 a {
  text-decoration: none
 }
-a:visited {
- 	color: #7e57c2;
-}
+
 a:link {
 	color: #212121;
 }

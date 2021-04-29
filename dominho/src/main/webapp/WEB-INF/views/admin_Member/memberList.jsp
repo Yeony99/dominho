@@ -25,9 +25,20 @@ function listSearch() {
 	color: #111;
 	font-weight: 200;
 }
-
+.selectField {
+	height: 45px;
+	padding-left: 20px;
+	padding-right: 50px;
+	border: 1px solid #ddd;
+	color: #888888;
+	font-size: 15px;
+	float: left;
+	margin-right: 5px;
+	margin-left: 190px;
+	margin-top: 53px;
+}
 .container {
-	padding: 30px 0px 0px 110px;
+	padding: 30px 0px 80px 130px;
 }
 .allDataCount {
 	width: 100%;
@@ -52,14 +63,32 @@ function listSearch() {
 	margin-right: 5px;
 	
 }
-
+.btn{
+	width: 80px;
+	height: 40px;
+	background-color: #424242;
+	color: white;
+	border: 1px solid #ddd;
+	cursor: pointer;
+	margin-bottom: 10px;
+	margin-top: 20px;
+}
 .btnSearch {
 	width: 43px;
 	height: 43px;
 	background-color: white;
 	border: 1px solid #ddd;
 	cursor: pointer;
+}
+a {
+ text-decoration: none
+}
 
+a:link {
+	color: #212121;
+}
+a:hover {
+	color: #f06292;
 }
 </style>
 </head>
@@ -70,7 +99,7 @@ function listSearch() {
 </div>
 
 <div class="container">
-	<div class="body_con" style="width: 800px;">
+	<div class="body_con" style="width: 1000px;">
 		<div class="body_title">
 			<span>고객정보</span>
 		</div>
@@ -78,7 +107,7 @@ function listSearch() {
 			<table style="width: 100%; height:120px; margin: 30px auto; border-spacing: 0px;">
 				<tr>
 					<td align="center" style=" width:100%; border-top: 2px solid #111;">
-					<form name="listSearchForm" action="${pageContext.request.contextPath}/admin/memberList" method="post">
+					<form name="listSearchForm" action="${pageContext.request.contextPath}/admin_Member/memberList" method="post">
 						<select name="condition" class="selectField">
 							<option value="userId" ${condition=="userId"?"selected='selected'":""}>아이디</option>
 				            <option value="userName" ${condition=="userName"?"selected='selected'":"" }>이름</option>			       						
@@ -104,16 +133,18 @@ function listSearch() {
 			
 			<table style="width: 100%; margin: 0px auto; border-spacing: 0px; border-collapse: collapse;">
 				<tr align="center" height="55">
+					<th width="100">번호</th>
 					<th width="150">아이디</th>
 					<th width="150">이름</th>
 					<th width="250">연락처</th>
-					<th>E-mail</th>
+					<th width="250">E-mail</th>
 				</tr>
 				
 				<c:forEach var="dto" items="${listMember}">
 					<tr align="center" height="55" style="border-bottom: 1px solid #ddd;">
+						<th width="100">번호</th>					
 						<td width="150">{dto.userId}</td>						
-						<td align="left" style="padding: 20px 0px 20px 10px;"> <a href="${detailUrl}">${dto.userName}</a></td>
+						<td align="left" style="padding: 20px 0px 20px 10px;"> <a href="${detailUrl}&userId=${dto.userId}">${dto.userName}</a></td>
 						<td width="250">${dto.tel}</td>
 						<td width="250">${dto.email}</td>
 					</tr>					
@@ -121,14 +152,28 @@ function listSearch() {
 
 				<c:forEach var="dto" items="${list}">
 					<tr align="center" height="55" style="border-bottom: 1px solid #ddd;">
-						<td>${dto.userId}</td>
-						<td align="left" style="text-align: center;"><a href="${detailUrl}">${dto.userName}</a></td>
-						<td>${dto.tel}</td>
-						<td>${dto.birth}</td>
-						<td>${dto.email}</td>
+						<td width="100">${dto.listNum}</td>
+						<td width="150">${dto.userId}</td>
+						<td align="left" style="text-align: center;"><a href="${detailUrl}&userId=${dto.userId}">${dto.userName}</a></td>
+						<td width="250">${dto.tel}</td>
+						<td width="250">${dto.email}</td>
 					</tr>
 				</c:forEach>
 			</table>
+			<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
+			   <tr height="35">
+				<td align="center">
+			        ${dataCount==0?"등록된 회원이 없습니다.":paging}
+				</td>
+			   </tr>
+			</table>
+			<table>			
+				<tr>
+			      <td align="left" width="100">
+			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/admin_Member/memberList';">새로고침</button>
+			      </td>			
+			     </tr>	
+			     </table>
 		</form>
 		
 		</div>

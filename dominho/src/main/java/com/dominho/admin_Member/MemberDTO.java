@@ -9,8 +9,8 @@ public class MemberDTO {
 	private String tel;
 	private String birth;
 	private String zip;
-	private String addr1;
-	private String addr2;
+	private String address1;
+	private String address2;
 	private String joinedDate;
 	private String gender;
 	
@@ -56,18 +56,7 @@ public class MemberDTO {
 	public void setZip(String zip) {
 		this.zip = zip;
 	}
-	public String getAddr1() {
-		return addr1;
-	}
-	public void setAddr1(String addr1) {
-		this.addr1 = addr1;
-	}
-	public String getAddr2() {
-		return addr2;
-	}
-	public void setAddr2(String addr2) {
-		this.addr2 = addr2;
-	}
+
 	public String getJoinedDate() {
 		return joinedDate;
 	}
@@ -85,6 +74,18 @@ public class MemberDTO {
 	}
 	public void setUserPwd(String userPwd) {
 		this.userPwd = userPwd;
+	}
+	public String getAddress1() {
+		return address1;
+	}
+	public void setAddress1(String address1) {
+		this.address1 = address1;
+	}
+	public String getAddress2() {
+		return address2;
+	}
+	public void setAddress2(String address2) {
+		this.address2 = address2;
 	}
 	
 	

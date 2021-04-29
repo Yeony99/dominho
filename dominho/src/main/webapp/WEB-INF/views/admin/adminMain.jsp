@@ -13,14 +13,15 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <style type="text/css">
 .btn{
-	width: 150px;
-	height: 50px;
+	width: 200px;
+	height: 70px;
 	font-size: medium;
 	border-radius: 0;
 	background-color: #424242;
 	color: white;
 	cursor: pointer;
 	border: none;
+	
 }
 .txt
 {
@@ -37,11 +38,11 @@
 <jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
 </div>
 
-<div class="txt">관리모드</div>
+<div class="txt" style="padding-top: 100px; padding-left: 575px;">관리모드</div>
 
-<div>
-<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/admin_Member/memberList';">회원정보</button>
-<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/';">주문내역</button>
+<div style="padding-top: 40px; padding-left: 425px; padding-bottom: 60px;">
+<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/admin_Member/memberList';">고객정보</button>
+<button type="button" class="btn" style="margin-left: 10px;" onclick="javascript:location.href='${pageContext.request.contextPath}/';">주문내역</button>
 </div>
 
 <div class="footer">

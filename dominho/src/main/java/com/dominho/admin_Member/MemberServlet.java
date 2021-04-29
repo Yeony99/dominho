@@ -89,8 +89,8 @@ public class MemberServlet extends MyUploadServlet{
 		
 		// 데이터 개수
 		int dataCount;
-		if(keyword.length()==0) {
-			dataCount = dao.dataCount();
+		if(keyword.length()!=0) {
+			dataCount = dao.dataCount(condition, keyword);
 		}else
 			dataCount = dao.dataCount();
 		
@@ -125,8 +125,8 @@ public class MemberServlet extends MyUploadServlet{
 		}
 		
 		// 페이징 처리
-		String listUrl = cp+"/admin/memberList";
-		String detailUrl = cp+"/admin/memberDetail?page="+current_page;
+		String listUrl = cp+"/admin_Member/memberList";
+		String detailUrl = cp+"/admin_Member/memberDetail?page="+current_page;
 		
 		if(query.length()!=0) {
 			listUrl += "?"+query;
@@ -200,7 +200,7 @@ public class MemberServlet extends MyUploadServlet{
 		String query ="page="+page;
 		
 		try {
-			String userId = req.getParameter("usrId");
+			String userId = req.getParameter("userId");
 			String condition = req.getParameter("condition");
 			String keyword = req.getParameter("keyword");
 			
@@ -222,8 +222,13 @@ public class MemberServlet extends MyUploadServlet{
 			
 			dao.deleteMember(userId);
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace();
+			// 삭제 불가 메시지를 출력할 jsp로 포워딩
+			
+			return;
 		}
+		
+		
 		resp.sendRedirect(cp+"/admin_Member/memberList?"+query);
 	}
 
