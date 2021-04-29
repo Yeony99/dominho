@@ -136,11 +136,9 @@
 					href="${pageContext.request.contextPath}/mypage/myOrderList.do">주문내역</a></span></li>
 			<li><span class="un"><a
 					href="${pageContext.request.contextPath}/member/pwd.do?mode=update">정보수정</a></span></li>
-			<!-- 			<li><span class="un"><a href="#">1:1 문의</a></span></li>
-			<li><span class="un"><a href="#">쿠폰함</a></span></li>-->
 		</ul>
 	</div>
-
+<c:if test="${mode eq 'myOrderList'}">
 	<div class="myPageBox">
 		<div style="padding: 30px 30px;">
 			<div
@@ -149,6 +147,7 @@
 			</div>
 		</div>
 	</div>
+
 	<table
 		style="width: 100%; margin: 0px auto; border-spacing: 0px; border-collapse: collapse;">
 		<tr align="center" height="55">
@@ -166,7 +165,7 @@
 				<td>${dto.totalPrice}원</td>
 				<td width="200">${dto.orderDate}</td>
 		</c:forEach>
-
+	</c:if>
 	</table>
 	<c:if test="${mode eq 'update'}">
 		<form name="confirm" method="post" class="loginForm" action="">

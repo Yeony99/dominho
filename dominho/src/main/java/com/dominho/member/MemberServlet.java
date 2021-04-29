@@ -282,6 +282,7 @@ public class MemberServlet extends MyServlet {
 		
 		myorders = dao.readMyOrder(info.getUserId());
 		
+		req.setAttribute("mode", "myOrderList");
 		req.setAttribute("AllOrders", myorders);
 		forward(req, resp, "/WEB-INF/views/mypage/myOrderList.jsp");
 	}

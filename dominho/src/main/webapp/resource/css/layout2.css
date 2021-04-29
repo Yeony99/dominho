@@ -86,10 +86,10 @@ ul.nav>li:hover .submenu{
 
 #container {
 	width: 100%;
+	min-height: 1500px;
 }
 .main-container {
-	background:#505050; /*구분 편의하게 넣어놓은 것입니다...*/
-	height: 600px;
+
 }
 
 .main-content {
