@@ -51,7 +51,7 @@ function deleteMenu(menuNum) {
 			</tr>
 			
 			<tr>
-				<td colspan="2" align="left" style="padding: 10px 5px;">
+				<td colspan="2" align="center" style="padding: 10px 5px;">
 					<div>
 			      		<img src="${pageContext.request.contextPath}/uploads/menu/${dto.imageFilename}" style="max-width: 100%; height: auto; resize: both;">
 			      	</div>
@@ -59,7 +59,7 @@ function deleteMenu(menuNum) {
 			</tr>
 			
 			<tr style="border-bottom: 1px solid #cccccc;">
-			  <td colspan="2" align="left" style="padding: 10px 5px;" valign="top" height="200">
+			  <td colspan="2" align="left" style="padding: 10px 5px;" valign="top" height="70">
 			      ${dto.menuExplain}
 			   </td>
 			</tr>
@@ -68,7 +68,7 @@ function deleteMenu(menuNum) {
 			    <td>
 			    	<c:choose>
 			    		<c:when test="${sessionScope.member.userId=='admin'}">
-			    			<p>재고 : ${mddto.count}</p>
+			    			
 			          		<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/menu/menuUpdate.do?menuNum=${dto.menuNum}&page=${page}';">수정</button>
 			          	</c:when>
 			        </c:choose>	

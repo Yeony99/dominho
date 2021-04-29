@@ -14,8 +14,8 @@
 
 <style type="text/css">
 .imgLayout {
-	width: 190px;
-	height: 205px;
+	width: 220px;
+	height: 215px;
 	padding: 10px 5px 10px;
 	margin: 5px;
 	border: 1px solid #dad9ff;
@@ -24,7 +24,7 @@
 
 .subject {
 	display: inline-block;
-	width: 180px;
+	width: 205px;
 	height: 25px;
 	line-height: 25px;
 	margin: 5px auto;
@@ -115,7 +115,7 @@ function searchList() {
 		      
 		      <c:choose>
 			        	<c:when test="${sessionScope.member.userId=='admin'}">
-			          		<td align="right" width="50%">
+			          		<td align="right">
 		          				<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/menu/menuCreated.do';">메뉴 올리기</button>
 		      				</td>
 			          	</c:when>
