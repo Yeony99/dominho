@@ -110,12 +110,54 @@ public class QBoardDAO {
 		
 		return result;
 	}
-
+	
 	public int dataCount(String condition, String keyword) {
-		int result = 0;
+        int result=0;
+        PreparedStatement pstmt=null;
+        ResultSet rs=null;
+        String sql;
 
-		return result;
-	}
+        try {
+        	sql="SELECT NVL(COUNT(*), 0) FROM qna q JOIN member m ON q.userId=m.userId ";
+        	if(condition.equals("created")) {
+        		keyword = keyword.replaceAll("(\\-|\\/|\\.)", "");
+        		sql+="  WHERE TO_CHAR(created, 'YYYYMMDD') = ?  ";
+        	} else if(condition.equals("all")) {
+        		sql+="  WHERE INSTR(subject, ?) >= 1 OR INSTR(content, ?) >= 1 ";
+        	} else {
+        		sql+="  WHERE INSTR(" + condition + ", ?) >= 1 ";
+        	}
+        	
+            pstmt=conn.prepareStatement(sql);
+            pstmt.setString(1, keyword);
+            if(condition.equals("all")) {
+                pstmt.setString(2, keyword);
+            }
+
+            rs=pstmt.executeQuery();
+
+            if(rs.next())
+                result=rs.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			}
+				
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+        
+        return result;
+    }
 
 	public List<QBoardDTO> listBoard(int offset, int rows) {
 		List<QBoardDTO> list=new ArrayList<QBoardDTO>();
