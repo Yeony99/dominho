@@ -23,6 +23,7 @@ main h2 {
 	text-align: center;
 	color: #CA3D2A;
 	font-weight: bold;
+	margin-top: 20px;
 }
 
 .box, .prices {
@@ -90,7 +91,7 @@ h3 {
 	</header>
 
 	<main>
-		<h3>장바구니</h3>
+		<h3 style="padding-bottom:20px; border-bottom: 2px solid #111;">장바구니</h3>
 
 
 		<h2>${dataCount==0?"장바구니가 비었습니다":"장바구니 목록"}</h2>

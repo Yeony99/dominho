@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dominho.menu.MenuDTO;
 import com.dominho.store.StoreDTO;
 import com.util.DBConn;
 
@@ -369,6 +370,75 @@ public class OrderDAO {
 					pstmt.close();
 				} catch (Exception e) {
 
+				}
+			}
+		}
+		return result;
+	}
+	public MenuDTO readMenu(int menuNum) {
+		MenuDTO dto = new MenuDTO();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "SELECT m.menuNum, menuName, menuExplain, menuPrice, imageFileName "
+					+ " FROM menu m "
+					+ " WHERE m.menuNum=?";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, menuNum);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				dto = new MenuDTO();				
+				dto.setMenuNum(rs.getInt("menuNum"));
+				dto.setMenuName(rs.getString("menuName"));
+				dto.setMenuExplain(rs.getString("menuExplain"));
+				dto.setMenuPrice(rs.getInt("menuPrice"));
+				dto.setImageFilename(rs.getString("imageFileName"));
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return dto;
+	}
+	public int updateStore(int storeNum, int count, int menuNum) throws SQLException {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		try {
+			sql = "UPDATE menudetail SET count=count-? WHERE menuNum=? and storenum = ? ";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, count);
+			pstmt.setInt(2, menuNum);		
+			pstmt.setInt(3, storeNum);		
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
 				}
 			}
 		}

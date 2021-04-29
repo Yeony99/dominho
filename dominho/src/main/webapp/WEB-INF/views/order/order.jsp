@@ -153,6 +153,7 @@ main h2 {
 	text-align: center;
 	color: #CA3D2A;
 	font-weight: bold;
+	margin-top: 20px;
 }
 
 .box1 {
@@ -185,7 +186,7 @@ main h2 {
 		<jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
 	</header>
 	<main>
-		<h3>주문</h3>
+		<h3 style="padding-bottom: 20px; border-bottom: 2px solid #111;">주문</h3>
 		<br>
 		<h2>주문 메뉴 정보</h2>
 		<hr>

@@ -32,6 +32,7 @@ h2 {
 	color: #CA3D2A;
 	font-weight: bold;
 	text-align: center;
+	margin-bottom: 20px;
 }
 </style>
 

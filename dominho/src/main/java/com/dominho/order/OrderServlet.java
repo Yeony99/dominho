@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.dominho.member.SessionInfo;
-import com.dominho.menu.MenuDAO;
 import com.dominho.menu.MenuDTO;
 import com.dominho.store.StoreDTO;
 import com.util.MyServlet;
@@ -82,7 +81,10 @@ public class OrderServlet extends MyServlet {
 			for (String m : menus) {
 				mdao.insertOrderDetail(Integer.parseInt(m.split(",")[0]), Integer.parseInt(m.split(",")[2]),
 						Integer.parseInt(m.split(",")[1]));
+				//주문한 수량만큼 store에서 수량 감소시키기
+				mdao.updateStore(storeNum, Integer.parseInt(m.split(",")[1]),Integer.parseInt(m.split(",")[0]));
 			}
+			
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -98,7 +100,6 @@ public class OrderServlet extends MyServlet {
 
 	private void order(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<CartDTO> list = new ArrayList<CartDTO>();
-		MenuDAO dao = new MenuDAO();
 		OrderDAO mdao = new OrderDAO();
 		String[] checkedMenu = req.getParameterValues("cbox");
 		int totalPrice = 0;
@@ -112,7 +113,7 @@ public class OrderServlet extends MyServlet {
 				CartDTO cart = new CartDTO();
 				cart.setMenuNum(Integer.parseInt(m.split(",")[1]));
 				cart.setQuantity(Integer.parseInt(m.split(",")[2]));
-				MenuDTO menu = dao.readMenu(Integer.parseInt(m.split(",")[1]));
+				MenuDTO menu = mdao.readMenu(Integer.parseInt(m.split(",")[1]));
 				cart.setMenuName(menu.getMenuName());
 				cart.setPrice(menu.getMenuPrice() * Integer.parseInt(m.split(",")[2]));
 				cart.setImageFileName(menu.getImageFilename());
