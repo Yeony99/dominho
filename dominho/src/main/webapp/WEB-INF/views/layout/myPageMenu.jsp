@@ -26,7 +26,8 @@
 	float: left;
 	position: relative;
 	left: 170px;
-	bottom: 60px; border : none;
+	bottom: 60px;
+	border: none;
 	border-radius: 10px;
 	height: 30px;
 	width: 100px;
@@ -34,7 +35,8 @@
 }
 
 .loginForm {
-	margin: 50px auto; width : 300px;
+	margin: 50px auto;
+	width: 300px;
 	height: 500px;
 	padding: 30px, 20px;
 	background-color: #FFFFFF;
@@ -89,7 +91,7 @@
 .btn {
 	position: relative;
 	left: 50%;
-	top:5%;
+	top: 5%;
 	transform: translateX(-50%);
 	margin-bottom: 40px;
 	width: 80%;
@@ -100,7 +102,8 @@
 	color: white;
 	font-weight: bold;
 	border: none;
-	border-radius: 20px; cursor : pointer;
+	border-radius: 20px;
+	cursor: pointer;
 	transition: 0.4s;
 	display: inline;
 	cursor: pointer;
@@ -137,17 +140,34 @@
 			<li><span class="un"><a href="#">쿠폰함</a></span></li>-->
 		</ul>
 	</div>
-	<c:if test="${mode eq 'myOrderList'}">
-		<div class="myPageBox">
-			<div style="padding: 30px 30px;">
-				<div
-					style="border-bottom: 2px solid #CA3D2A; display: inline-block; position: relative;">
-					<h3>${sessionScope.member.userName}님의&nbsp;주문내역입니다.</h3>
 
-				</div>
+	<div class="myPageBox">
+		<div style="padding: 30px 30px;">
+			<div
+				style="border-bottom: 2px solid #CA3D2A; display: inline-block; position: relative; font-size: 20px;">
+				<span style="font-weight: 600;">${sessionScope.member.userName}님</span>의&nbsp;주문내역입니다.
 			</div>
 		</div>
-	</c:if>
+	</div>
+	<table
+		style="width: 100%; margin: 0px auto; border-spacing: 0px; border-collapse: collapse;">
+		<tr align="center" height="55">
+			<th width="60">주문번호</th>
+			<th width="150">주문매장</th>
+			<th width="107">배달/포장</th>
+			<th>결제금액</th>
+			<th width="200">주문일</th>
+		</tr>
+		<c:forEach var="dto" items="${AllOrders}">
+			<tr align="center" height="55" style="border-bottom: 1px solid #ddd;">
+				<td width="60">${dto.orderNum}</td>
+				<td width="150">${dto.storeName}</td>
+				<td width="107">${dto.isDelivery}</td>
+				<td>${dto.totalPrice}원</td>
+				<td width="200">${dto.orderDate}</td>
+		</c:forEach>
+
+	</table>
 	<c:if test="${mode eq 'update'}">
 		<form name="confirm" method="post" class="loginForm" action="">
 			<h2>본인여부 확인</h2>
@@ -159,7 +179,8 @@
 				<input type="password" name="userPwd" class="pw"
 					placeholder="비밀번호를 입력해주세요.">
 			</div>
-			<button type="button" class="btn" onclick="sendConfirm();">비밀번호 확인</button>
+			<button type="button" class="btn" onclick="sendConfirm();">비밀번호
+				확인</button>
 			<div class="msgBox" style="color: #CA3D2A">${msg}</div>
 		</form>
 	</c:if>

@@ -2,6 +2,7 @@ package com.dominho.member;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.dominho.order.AllOrderInfoDTO;
 import com.util.MyServlet;
 
 @WebServlet(urlPatterns = { "/member/*", "/mypage/*", "/admin/adminMain"})
@@ -193,20 +195,6 @@ public class MemberServlet extends MyServlet {
 				forward(req, resp, "/WEB-INF/views/member/pwd.jsp");
 				return;
 			}
-			
-//			if(mode.equals("delete")) {
-//				// 회원탈퇴
-//				dao.deleteMember(info.getUserId());
-//				
-//				session.removeAttribute("member");
-//				session.invalidate();
-//				
-//				resp.sendRedirect(cp);
-//				return;
-//			}
-			
-			// 회원정보수정 - 회원수정폼으로 이동
-//			req.setAttribute("title", "회원 정보 수정");
 			req.setAttribute("dto", dto);
 			req.setAttribute("mode", "update");
 			forward(req, resp, "/WEB-INF/views/mypage/myPage.jsp");
@@ -286,7 +274,15 @@ public class MemberServlet extends MyServlet {
 	}
 
 	private void myOrderList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.setAttribute("mode", "myOrderList");
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		MemberDAO dao = new MemberDAO();
+		List<AllOrderInfoDTO> myorders = null;
+		
+		myorders = dao.readMyOrder(info.getUserId());
+		
+		req.setAttribute("AllOrders", myorders);
 		forward(req, resp, "/WEB-INF/views/mypage/myOrderList.jsp");
 	}
 	

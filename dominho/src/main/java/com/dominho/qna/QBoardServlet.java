@@ -72,9 +72,10 @@ public class QBoardServlet extends HttpServlet {
 		QBoardDAO dao = new QBoardDAO();
 		String cp = req.getContextPath();
 		
+		
 		String page = req.getParameter("page");
 		int current_page = 1;
-		if(page !=null) {
+		if(page !=null) { //여기서 오류 numberformatException For input string: "null"
 			current_page = Integer.parseInt(page);
 		}
 		
@@ -204,10 +205,11 @@ public class QBoardServlet extends HttpServlet {
 				resp.sendRedirect(cp+"/qna/list.do?"+query);
 				return;
 			}
+
 			MyUtil util = new MyUtil();
 			dto.setContent(util.htmlSymbols(dto.getContent()));
 			QBoardDTO preReadDto = dao.preReadBoard(dto.getGroupNum(), dto.getOrderNo(), condition, keyword);
-			QBoardDTO nextReadDto = dao.preReadBoard(dto.getGroupNum(), dto.getOrderNo(), condition, keyword);
+			QBoardDTO nextReadDto = dao.nextReadBoard(dto.getGroupNum(), dto.getOrderNo(), condition, keyword);
 			
 			req.setAttribute("dto", dto);
 			req.setAttribute("preReadDto", preReadDto);
@@ -244,7 +246,7 @@ public class QBoardServlet extends HttpServlet {
 			if(keyword.length()!=0) {
 				query+="&condition="+condition+"&keyword="+URLEncoder.encode(keyword, "utf-8");
 			}
-			int boardNum = Integer.parseInt(req.getParameter("boardNum"));
+			int boardNum = Integer.parseInt(req.getParameter("qBoardNum"));
 			QBoardDTO dto = dao.readBoard(boardNum);
 			
 			if(dto == null) {
@@ -272,13 +274,12 @@ public class QBoardServlet extends HttpServlet {
 	}
 	
 	protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		forward(req, resp, "/WEB-INF/views/qna/list.jsp");
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		String cp = req.getContextPath();
 		if(req.getMethod().equalsIgnoreCase("GET")) {
-			resp.sendRedirect(cp+"qna/list.do");
+			resp.sendRedirect(cp+"/qna/list.do");
 			return;
 		}
 		
@@ -290,12 +291,12 @@ public class QBoardServlet extends HttpServlet {
 		try {
 			String condition = req.getParameter("condition");
 			String keyword = req.getParameter("keyword");
-			if(keyword.length()!=0) {
+			if(condition!=null) { 
 				query +="&condition="+condition+"&keyword="+URLEncoder.encode(keyword, "UTF-8");
 			}
 			
 			QBoardDTO dto = new QBoardDTO();
-			dto.setqBoardNum(Integer.parseInt(req.getParameter("boardNum")));
+			dto.setqBoardNum(Integer.parseInt(req.getParameter("qBoardNum")));
 			dto.setSubject(req.getParameter("subject"));
 			dto.setContent(req.getParameter("content"));
 			
@@ -312,7 +313,7 @@ public class QBoardServlet extends HttpServlet {
 		String page = req.getParameter("page");
 		
 		try {
-			int boardNum = Integer.parseInt(req.getParameter("boardNum"));
+			int boardNum = Integer.parseInt(req.getParameter("qBoardNum"));
 			
 			QBoardDTO dto =dao.readBoard(boardNum);
 			if(dto==null) {
@@ -387,7 +388,7 @@ public class QBoardServlet extends HttpServlet {
 			if(keyword.length()!=0) {
 				query +="&condition="+condition+"&keyword="+URLEncoder.encode(keyword, "utf-8");
 			}
-			int boardNum = Integer.parseInt(req.getParameter("boardNum"));
+			int boardNum = Integer.parseInt(req.getParameter("qBoardNum"));
 			QBoardDTO dto= dao.readBoard(boardNum);
 			
 			if(dto == null) {

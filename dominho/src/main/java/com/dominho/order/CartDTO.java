@@ -8,6 +8,7 @@ public class CartDTO {
 	private int quantity;
 	private String created;
 	private int price;
+	private String imageFileName;
 	
 	public int getCartId() {
 		return cartId;
@@ -51,4 +52,11 @@ public class CartDTO {
 	public void setPrice(int price) {
 		this.price = price;
 	}
+	public String getImageFileName() {
+		return imageFileName;
+	}
+	public void setImageFileName(String imageFileName) {
+		this.imageFileName = imageFileName;
+	}
+	
 }

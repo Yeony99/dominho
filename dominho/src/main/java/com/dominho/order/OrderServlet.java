@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.dominho.member.SessionInfo;
-import com.dominho.menu.MenuDAO;
 import com.dominho.menu.MenuDTO;
 import com.dominho.store.StoreDTO;
 import com.util.MyServlet;
@@ -51,6 +50,8 @@ public class OrderServlet extends MyServlet {
 	}
 
 	private void orderSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		OrderDAO mdao = new OrderDAO();
@@ -74,12 +75,16 @@ public class OrderServlet extends MyServlet {
 			}
 			// 주문 생성
 			mdao.insertOrder(info.getUserId(), storeNum, isDelivery, totalPrice, creditCard, tel, address, request);
+
 			// 주문상세
 			String[] menus = req.getParameterValues("menus");
 			for (String m : menus) {
 				mdao.insertOrderDetail(Integer.parseInt(m.split(",")[0]), Integer.parseInt(m.split(",")[2]),
 						Integer.parseInt(m.split(",")[1]));
+				//주문한 수량만큼 store에서 수량 감소시키기
+				mdao.updateStore(storeNum, Integer.parseInt(m.split(",")[1]),Integer.parseInt(m.split(",")[0]));
 			}
+			
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -87,33 +92,31 @@ public class OrderServlet extends MyServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		String cp = req.getContextPath();
 		resp.sendRedirect(cp + "/order/orderComplete.do");
+		return;
 
 	}
 
 	private void order(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<CartDTO> list = new ArrayList<CartDTO>();
-		MenuDAO dao = new MenuDAO();
 		OrderDAO mdao = new OrderDAO();
 		String[] checkedMenu = req.getParameterValues("cbox");
 		int totalPrice = 0;
 		List<StoreDTO> allList = mdao.allStore();
 		List<String> alladdress = new ArrayList<String>();// 모든 매장의 주소들
-		System.out.println("모든매장");
 		for (StoreDTO s : allList) {
 			alladdress.add(s.getStoreAddress());
-			System.out.println(s.getStoreName());
 		}
 		try {
 			for (String m : checkedMenu) {
 				CartDTO cart = new CartDTO();
 				cart.setMenuNum(Integer.parseInt(m.split(",")[1]));
 				cart.setQuantity(Integer.parseInt(m.split(",")[2]));
-				MenuDTO menu = dao.readMenu(Integer.parseInt(m.split(",")[1]));
+				MenuDTO menu = mdao.readMenu(Integer.parseInt(m.split(",")[1]));
 				cart.setMenuName(menu.getMenuName());
 				cart.setPrice(menu.getMenuPrice() * Integer.parseInt(m.split(",")[2]));
+				cart.setImageFileName(menu.getImageFilename());
 				list.add(cart);
 				totalPrice += menu.getMenuPrice() * Integer.parseInt(m.split(",")[2]);
 				// 배달가능한 매장 리스트
@@ -123,32 +126,21 @@ public class OrderServlet extends MyServlet {
 				List<String> storeaddress = new ArrayList<String>();
 				for (StoreDTO s : deliveryList) {
 					storeaddress.add(s.getStoreAddress());
-					System.out.println(s.getStoreName()+"배달가능");
 				}
 				
 				for (String s : alladdress) {
-					System.out.println("s는"+s);
-					for(String a:storeaddress) {
-						System.out.println(a+"는 storeaddress");
-					}
 					if (!storeaddress.contains(s)) {// 모든 매장중에 배달 가능한 매장이 아니면 지우기
 						Iterator<StoreDTO> it = allList.iterator();// ConcurrentModificationException막기위함
 						while (it.hasNext()) {// 값으로 넘겨야하는 배달가능한 모든 매장
 							StoreDTO dto = it.next();
-							System.out.println("여기서 말하는 s는"+s);
-							System.out.println("이터레이터가 가리키는 곳"+dto.getStoreName());
 							if (dto.getStoreAddress().equals(s)) { // s는 배달가능한 매장에 포함 안된 매장주소
-								System.out.println(dto.getStoreName()+"삭제");
 								it.remove();
-//								allList.remove(dto);
 								break;
 							}
 						}
 					}
 				}
-				for(StoreDTO s:allList) {
-					System.out.println(s.getStoreName()+"가 삭제 안되고 남아있음");
-				}
+				
 				
 			}
 		} catch (Exception e) {
@@ -169,10 +161,14 @@ public class OrderServlet extends MyServlet {
 		// 최근 주문 한개 보여주기
 		OrderDAO mdao = new OrderDAO();
 		List<AllOrderInfoDTO> myorders = null;
-
 		myorders = mdao.recentMyOrder(info.getUserId());
+		
+		//최근 주문 한개의 주문 내역 가져오기
+		List<OrderDetailDTO> orderdetails=null;
+		orderdetails=mdao.recentMyOrderDetail();
 
 		req.setAttribute("AllOrders", myorders);
+		req.setAttribute("AllOrderDetail", orderdetails);
 		String path = "/WEB-INF/views/order/orderResult.jsp";
 		forward(req, resp, path);
 

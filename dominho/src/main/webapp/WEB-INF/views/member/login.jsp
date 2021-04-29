@@ -1,3 +1,6 @@
+<%@page import="java.math.BigInteger"%>
+<%@page import="java.security.SecureRandom"%>
+<%@page import="java.net.URLEncoder"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -18,7 +21,8 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <style type="text/css">
 .loginForm {
-	margin: 50px auto; width : 300px;
+	margin: 50px auto;
+	width: 300px;
 	height: 500px;
 	padding: 30px, 20px;
 	background-color: #FFFFFF;
@@ -83,7 +87,8 @@
 	color: white;
 	font-weight: bold;
 	border: none;
-	border-radius: 20px; cursor : pointer;
+	border-radius: 20px;
+	cursor: pointer;
 	transition: 0.4s;
 	display: inline;
 	cursor: pointer;
@@ -103,27 +108,26 @@
 }
 </style>
 <script type="text/javascript">
-function sendLogin() {
-    var f = document.loginForm;
+	function sendLogin() {
+		var f = document.loginForm;
 
-	var str = f.userId.value;
-    if(!str) {
-        alert("아이디를 입력하세요. ");
-        f.userId.focus();
-        return;
-    }
+		var str = f.userId.value;
+		if (!str) {
+			alert("아이디를 입력하세요. ");
+			f.userId.focus();
+			return;
+		}
 
-    str = f.userPwd.value;
-    if(!str) {
-        alert("패스워드를 입력하세요. ");
-        f.userPwd.focus();
-        return;
-    }
+		str = f.userPwd.value;
+		if (!str) {
+			alert("패스워드를 입력하세요. ");
+			f.userPwd.focus();
+			return;
+		}
 
-    f.action = "${pageContext.request.contextPath}/member/login_ok.do"; //여기로 넘김.
-    f.submit();
-}
-
+		f.action = "${pageContext.request.contextPath}/member/login_ok.do"; //여기로 넘김.
+		f.submit();
+	}
 </script>
 <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 </head>
@@ -143,13 +147,13 @@ function sendLogin() {
 				<input type="password" name="userPwd" class="pw" placeholder="패스워드">
 			</div>
 			<button type="button" class="btn" onclick="sendLogin();">로그인</button>
-			 <a id="kakao-login-btn"></a>
-			 <div class="msgBox" style="color: #CA3D2A ">
-			${msg}
-		</div>
+
+			<div class="msgBox" style="color: #CA3D2A">${msg}</div>
 			<div class="bottomText">
-				회원이 아니신가요? <a href="${pageContext.request.contextPath}/member/member.do">회원가입</a><br> 
-				<a href="${pageContext.request.contextPath}/">비밀번호 찾기</a>&nbsp;&nbsp;&nbsp;<a href="${pageContext.request.contextPath}/">아이디 찾기</a>
+				회원이 아니신가요? <a
+					href="${pageContext.request.contextPath}/member/member.do">회원가입</a><br>
+				<a href="${pageContext.request.contextPath}/">비밀번호 찾기</a>&nbsp;&nbsp;&nbsp;<a
+					href="${pageContext.request.contextPath}/">아이디 찾기</a>
 			</div>
 
 		</form>
@@ -159,8 +163,8 @@ function sendLogin() {
 	<footer>
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp" />
 	</footer>
-<script type="text/javascript">
-
-</script>
+	<script type="text/javascript">
+		
+	</script>
 </body>
 </html>

@@ -23,6 +23,7 @@ main h2 {
 	text-align: center;
 	color: #CA3D2A;
 	font-weight: bold;
+	margin-top: 20px;
 }
 
 .box, .prices {
@@ -90,7 +91,7 @@ h3 {
 	</header>
 
 	<main>
-		<h3>장바구니</h3>
+		<h3 style="padding-bottom:20px; border-bottom: 2px solid #111;">장바구니</h3>
 
 
 		<h2>${dataCount==0?"장바구니가 비었습니다":"장바구니 목록"}</h2>
@@ -99,7 +100,7 @@ h3 {
 			<c:forEach var="dto" items="${cartlist}">
 				<div class="box">
 					<input value="${dto.price},${dto.menuNum},${dto.quantity}" name="cbox" class="cbox" type="checkbox" checked="checked" onclick="menu_sum();">
-					<img src="${pageContext.request.contextPath}/resource/images/dominho_logo.svg" alt="Card image cap" width="130px" height="130px">
+					<img src="${pageContext.request.contextPath}/uploads/menu/${dto.imageFileName}" alt="Card image cap" width="130px" height="130px">
 					<p>${dto.menuName}× ${dto.quantity}</p>
 					<p>총 ${dto.price}원</p>
 					<input type="button" class="img-button" onclick="javascript:location.href='${pageContext.request.contextPath}/order/cart_delete.do?num=${dto.cartId}';">

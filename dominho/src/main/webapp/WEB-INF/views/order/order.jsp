@@ -17,6 +17,14 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/layout2.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resource/css/style2.css" type="text/css">
 <script type="text/javascript">
+window.history.forward();
+function noBack() {//뒤로가기로 못 오게(재주문 방지)
+
+	window.history.forward();
+
+}
+
+
 $(document).ready(function() {
 	discount();
 })
@@ -145,6 +153,7 @@ main h2 {
 	text-align: center;
 	color: #CA3D2A;
 	font-weight: bold;
+	margin-top: 20px;
 }
 
 .box1 {
@@ -177,7 +186,7 @@ main h2 {
 		<jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
 	</header>
 	<main>
-		<h3>주문</h3>
+		<h3 style="padding-bottom: 20px; border-bottom: 2px solid #111;">주문</h3>
 		<br>
 		<h2>주문 메뉴 정보</h2>
 		<hr>
@@ -185,7 +194,7 @@ main h2 {
 			<c:forEach var="dto" items="${cartlist}">
 				<input type="hidden" name="menus" value="${dto.menuNum},${dto.quantity},${dto.price}">
 				<div class="box1">
-					<img src="${pageContext.request.contextPath}/resource/images/dominho_logo.svg" alt="Card image cap" width="130px" height="130px">
+					<img src="${pageContext.request.contextPath}/uploads/menu/${dto.imageFileName}" alt="Card image cap" width="130px" height="130px">
 					<p>${dto.menuName}×${dto.quantity}</p>
 					<p>총 ${dto.price}원</p>
 				</div>

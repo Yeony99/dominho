@@ -93,12 +93,8 @@
 a {
  text-decoration: none
 }
-a:visited {
- 	color: #7e57c2;
-}
-a:link {
-	color: #212121;
-}
+
+
 a:hover {
 	color: #f06292;
 }
@@ -138,7 +134,7 @@ a:hover {
 							<div class="boxTFdiv">
 								<input type="text" name="keyword" class="boxTF"
 									value="${keyword}">
-								<button type="button" class="btnSearch" onclick="listSearch()">
+								<button type="button" class="btnSearch" onclick="searchList()">
 									<img alt=""
 										src="${pageContext.request.contextPath}/resource/images/notice_search.png"
 										style="padding-top: 5px;">
@@ -172,7 +168,7 @@ a:hover {
 								<td width="60">${dto.listNum}</td>
 								<td align="left" style="padding-left: 10px; text-align: center;">
 								<c:forEach var="n" begin="1" end="${dto.depth}">&nbsp;&nbsp;</c:forEach>
-								<c:if test="${dto.depth!=0}">└&nbsp;</c:if> 
+								<c:if test="${dto.depth!=0}">&#10551;&nbsp;&nbsp;[Re]&nbsp;</c:if> 
 								<a href="${articleUrl}&qBoardNum=${dto.qBoardNum}">${dto.subject}</a>
 							</td>
 								<td width="100">${dto.userName}</td>
@@ -185,7 +181,7 @@ a:hover {
 
 				<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
 					<tr height="55">
-						<td align="center">${dataCount!=0?paging:"등록된 게시물이 없습니다."}</td>
+						<td align="center">${dataCount==0?"등록된 게시물이 없습니다.":paging}</td>
 					</tr>
 				</table>
 

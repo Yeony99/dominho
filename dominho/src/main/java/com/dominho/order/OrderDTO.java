@@ -8,6 +8,7 @@ public class OrderDTO {
 	private String isDelivery;
 	private int totalPrice;
 	private String creditCardNum;
+	private String request;
 	public int getOrderNum() {
 		return orderNum;
 	}
@@ -49,6 +50,12 @@ public class OrderDTO {
 	}
 	public void setCreditCardNum(String creditCardNum) {
 		this.creditCardNum = creditCardNum;
+	}
+	public String getRequest() {
+		return request;
+	}
+	public void setRequest(String request) {
+		this.request = request;
 	}
 	
 }
