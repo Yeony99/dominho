@@ -22,6 +22,11 @@ function deleteMenu(menuNum) {
 		location.href=url;
 	}
 }
+
+function addCart() {
+	var f=document.cartForm;
+	f.submit();
+}
 </script>
 </head>
 <body>
@@ -72,8 +77,11 @@ function deleteMenu(menuNum) {
 			          		<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/menu/menuUpdate.do?menuNum=${dto.menuNum}&page=${page}';">수정</button>
 			          	</c:when>
 			        </c:choose>	
+			        <form name="cartForm" action="${pageContext.request.contextPath}/order/cart.do" method="post">
+			         	<input type="text" name="count" class="boxTF" value="${count}">
+			         	<button type="button" class="btn" onclick="addCart()">장바구니</button>
+			    	</form>
 			    </td>
-			
 				
 			    <td align="right">
 			    	<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/review/review.do?${query}';">리뷰</button>
@@ -82,8 +90,6 @@ function deleteMenu(menuNum) {
 			</tr>
 			</table>
         </div>
-
-
     </div>
 </div>
 
