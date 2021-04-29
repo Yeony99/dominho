@@ -53,7 +53,7 @@ public class OrderDAO {
 		ResultSet rs = null;
 		String sql;
 		try {
-			sql = "select cartId, c.menuNum, memberId, quantity, created, m.menuName, m.menuprice*quantity price from cart c join menu m on c.menuNum=m.menuNum"
+			sql = "select cartId, c.menuNum, memberId, quantity, created, m.menuName, m.menuprice*quantity price, m.imageFileName from cart c join menu m on c.menuNum=m.menuNum"
 					+ " where memberId=?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, userId);
@@ -68,6 +68,8 @@ public class OrderDAO {
 				dto.setQuantity(rs.getInt("quantity"));
 				dto.setCreated(rs.getString("created"));
 				dto.setPrice(rs.getInt("price"));
+				dto.setImageFileName(rs.getString("imageFileName"));
+		
 				list.add(dto);
 			}
 
@@ -222,7 +224,7 @@ public class OrderDAO {
 		ResultSet rs = null;
 		String sql;
 		try {
-			sql = "select ordernum, userId, storename, orderdate, isdelivery, totalprice, creditcardnum from(select m.ordernum, userid, s.storename, orderdate, isdelivery, totalprice, nvl(creditcardnum,'만나서결제') creditcardnum from myorder m join store s on m.storenum=s.storenum "
+			sql = "select ordernum, userId, storename, orderdate, isdelivery, totalprice, creditcardnum,request from(select m.ordernum, userid, s.storename, orderdate, isdelivery, totalprice, nvl(creditcardnum,'만나서결제') creditcardnum,request from myorder m join store s on m.storenum=s.storenum "
 					+ " where userId=?"
 					+ "	 order by m.ordernum desc) where rownum=1 ";
 			pstmt = conn.prepareStatement(sql);
@@ -237,9 +239,48 @@ public class OrderDAO {
 				dto.setIsDelivery(rs.getString("isDelivery"));
 				dto.setTotalPrice(rs.getInt("totalPrice"));
 				dto.setCardNum(rs.getString("creditcardnum"));
+				dto.setRequest(rs.getString("request"));
 				
 				list.add(dto);
 				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+
+		}
+		return list;
+	}
+	
+	public List<OrderDetailDTO> recentMyOrderDetail() {
+		List<OrderDetailDTO> list = new ArrayList<OrderDetailDTO>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		try {
+			sql = "select ordernum, m.menuname, ordercount, orderprice from orderdetail o join menu m on o.menunum=m.menunum where ordernum=(select max(ordernum) from orderdetail)";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				OrderDetailDTO dto = new OrderDetailDTO();
+				dto.setOrderNum(rs.getInt("ordernum"));
+				dto.setMenuName(rs.getString("menuname"));
+				dto.setCount(rs.getInt("ordercount"));
+				dto.setOrderPrice(rs.getInt("orderprice"));
+				list.add(dto);
 			}
 
 		} catch (Exception e) {
