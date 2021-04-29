@@ -1,6 +1,7 @@
 package com.dominho.store;
 
 public class StoreDTO {
+	private int listNum;
 	private int storeNum;
 	private String storeName;
 	private String storeTel;
@@ -8,6 +9,7 @@ public class StoreDTO {
 	private String openingHours;
 	private String closingHours;
 	private int totalSales;
+	
 	public int getStoreNum() {
 		return storeNum;
 	}
@@ -49,6 +51,12 @@ public class StoreDTO {
 	}
 	public void setTotalSales(int totalSales) {
 		this.totalSales = totalSales;
+	}
+	public int getListNum() {
+		return listNum;
+	}
+	public void setListNum(int listNum) {
+		this.listNum = listNum;
 	}
 	
 }
