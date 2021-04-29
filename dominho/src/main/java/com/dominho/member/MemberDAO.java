@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.dominho.order.AllOrderInfoDTO;
 import com.util.DBConn;
 
 public class MemberDAO {
@@ -163,4 +166,48 @@ public class MemberDAO {
 		return result;
 	}
 
+	public List<AllOrderInfoDTO> readMyOrder(String userId) {
+		List<AllOrderInfoDTO> list = new ArrayList<AllOrderInfoDTO>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "";
+
+		try {
+			sql = "SELECT orderNum, OrderDate, isdelivery, totalprice, storeNAme FROM myorder m, member, store WHERE m.userId = member.userId AND m.storeNum = store.storeNum AND member.userId = ? ORDER BY ordernum DESC";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userId);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				AllOrderInfoDTO dto = new AllOrderInfoDTO();
+				
+				dto.setOrderNum(rs.getInt("ordernum"));
+				dto.setOrderDate(rs.getString("orderDate"));
+				dto.setIsDelivery(rs.getString("isDelivery"));
+				dto.setStoreName(rs.getString("storeName"));
+				dto.setTotalPrice(rs.getInt("totalPrice"));
+				
+				list.add(dto);
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+
+		return list;
+	}
 }
