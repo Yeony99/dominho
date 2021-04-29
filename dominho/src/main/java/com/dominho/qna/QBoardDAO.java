@@ -518,7 +518,7 @@ public class QBoardDAO {
 		String sql;
 		
 		try {
-			sql="DELETE FROM qna WHERE qboardNum IN (SELECT qboardNum FROM qna START WITH  qboardNum = ? CONNECT BY PRIOR boardNum = parent)";
+			sql="DELETE FROM qna WHERE qboardNum IN (SELECT qboardNum FROM qna START WITH  qboardNum = ? CONNECT BY PRIOR qBoardNum = parent)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, qboardNum);
 			result = pstmt.executeUpdate();
