@@ -81,8 +81,10 @@ public class OrderServlet extends MyServlet {
 			for (String m : menus) {
 				mdao.insertOrderDetail(Integer.parseInt(m.split(",")[0]), Integer.parseInt(m.split(",")[2]),
 						Integer.parseInt(m.split(",")[1]));
-				//주문한 수량만큼 store에서 수량 감소시키기
-				mdao.updateStore(storeNum, Integer.parseInt(m.split(",")[1]),Integer.parseInt(m.split(",")[0]));
+				//주문한 수량만큼 store에서 수량 감소시키기,주문한 금액만큼 store totalsales 증가시키기
+				mdao.updateStore(storeNum, Integer.parseInt(m.split(",")[1]),Integer.parseInt(m.split(",")[0]),totalPrice);
+				
+				
 			}
 			
 		} catch (NumberFormatException e) {

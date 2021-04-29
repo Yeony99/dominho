@@ -418,7 +418,7 @@ public class OrderDAO {
 		}
 		return dto;
 	}
-	public int updateStore(int storeNum, int count, int menuNum) throws SQLException {
+	public int updateStore(int storeNum, int count, int menuNum, double totalPrice) throws SQLException {
 		int result = 0;
 		PreparedStatement pstmt = null;
 		String sql;
@@ -431,6 +431,13 @@ public class OrderDAO {
 			pstmt.setInt(2, menuNum);		
 			pstmt.setInt(3, storeNum);		
 			result = pstmt.executeUpdate();
+			pstmt.close();
+			
+			sql="UPDATE store set totalsales=totalsales+? where storenum=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setDouble(1, totalPrice);
+			pstmt.setInt(2, storeNum);
+			result+=pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
