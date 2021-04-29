@@ -12,18 +12,18 @@ import com.util.DBConn;
 public class ReviewDAO {
 	private Connection conn = DBConn.getConnection();
 	
-	public int insertReview(ReviewDTO dto) throws SQLException {
+	public int insertReview(ReviewDTO rdto) throws SQLException {
 		int result = 0;
 		PreparedStatement pstmt = null;
 		String sql;
 		
 		try {
-			sql = "INSERT INTO review(reviewId, orderNum, content) "
-					+ "VALUES (?, ?, ?) ";
+			sql = "INSERT INTO review(reviewNum, orderNum, content, created) "
+					+ "VALUES(review_seq.NEXTVAL, ?, ?, SYSDATE) ";
 			
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, dto.getReviewId());
-			pstmt.setString(2, dto.getContent());
+			pstmt.setInt(1, rdto.getOrderNum());
+			pstmt.setString(2, rdto.getContent());
 			
 			result = pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -59,13 +59,13 @@ public class ReviewDAO {
 			if(rs != null) {
 				try {
 					rs.close();
-				} catch (Exception e2) {
+				} catch (Exception e) {
 				}
 			}
 			if(pstmt != null) {
 				try {
 					pstmt.close();
-				} catch (Exception e2) {
+				} catch (Exception e) {
 				}
 			}
 		}
@@ -79,9 +79,11 @@ public class ReviewDAO {
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append("SELECT reviewId, orderNum, content ");
+			
+			sb.append("SELECT orderNum, content, created ");
 			sb.append(" FROM review ");
-			sb.append("OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
+			sb.append(" ORDER BY reviewNum DESC ");
+			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.setInt(1, offset);
@@ -89,12 +91,12 @@ public class ReviewDAO {
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				ReviewDTO dto = new ReviewDTO();
-				dto.setReviewId(rs.getString("reviewId"));
-				dto.setContent(rs.getString("content"));
-				dto.setOrderNum(rs.getInt("orderNum"));
+				ReviewDTO rdto = new ReviewDTO();
+				rdto.setOrderNum(rs.getInt("orderNum"));
+				rdto.setContent(rs.getString("content"));
+				rdto.setCreated(rs.getString("created"));
 				
-				list.add(dto);
+				list.add(rdto);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -117,22 +119,16 @@ public class ReviewDAO {
 		return list;
 	}
 	
-	public int deleteGuest(int num, String userId) throws SQLException {
+	public int deleteReview(int reviewNum) throws SQLException {
 		int result=0;
 		PreparedStatement pstmt=null;
 		String sql;
 		
 		try {
-			sql="DELETE FROM review WHERE orderNum=?";
-			if(! userId.equals("admin")) {
-				sql+=" AND userId = ?";
-			}
+			sql="DELETE FROM review WHERE reviewNum=?";
 			
 			pstmt=conn.prepareStatement(sql);
-			pstmt.setInt(1, num);
-			if(! userId.equals("admin")) {
-				pstmt.setString(2, userId);
-			}
+			pstmt.setInt(1, reviewNum);
 			
 			result=pstmt.executeUpdate();
 			

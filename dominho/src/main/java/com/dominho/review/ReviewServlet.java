@@ -25,34 +25,29 @@ public class ReviewServlet extends MyServlet {
 		
 		if(uri.indexOf("review.do")!=-1) {
 			review(req, resp);
-		} else if(uri.indexOf("review.do")!=-1) {
+		} else if(uri.indexOf("review_ok.do")!=-1) {
 			reviewSubmit(req, resp);
-		} else if(uri.indexOf("review.do")!=-1) {
-			reviewDelete(req, resp);
+		} else if(uri.indexOf("deleteReview.do")!=-1) {
+			deleteReview(req, resp);
 		}
 	}
 	
 	private void review(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 방명록 리스트
 		String cp=req.getContextPath();
 		
-		ReviewDAO dao=new ReviewDAO();
+		ReviewDAO rdao=new ReviewDAO();
 		MyUtil util=new MyUtil();
 		
-		// 넘어온 페이지
 		String page=req.getParameter("page");
 		int current_page=1;
 		if(page!=null && page.length()!=0)
 			current_page=Integer.parseInt(page);
+
+		int dataCount=rdao.dataCount();
 		
-		// 전체 데이터 개수
-		int dataCount=dao.dataCount();
-		
-		// 전체페이지수 구하기
 		int rows=5;
 		int total_page=util.pageCount(rows, dataCount);
 		
-		// 전체페이지보다 표시할 페이지가 큰경우
 		if(total_page<current_page) {
 			current_page=total_page;
 		}
@@ -61,19 +56,17 @@ public class ReviewServlet extends MyServlet {
 		if(offset < 0) offset = 0;
 		
 		// 데이터 가져오기
-		List<ReviewDTO> list=dao.listReview(offset, rows);
+		List<ReviewDTO> list=rdao.listReview(offset, rows);
 		
-		for(ReviewDTO dto : list) {
-			dto.setContent(dto.getContent().replaceAll(">", "&gt;"));
-			dto.setContent(dto.getContent().replaceAll("<", "&lt;"));
-			dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+		for(ReviewDTO rdto : list) {
+			rdto.setContent(rdto.getContent().replaceAll(">", "&gt;"));
+			rdto.setContent(rdto.getContent().replaceAll("<", "&lt;"));
+			rdto.setContent(rdto.getContent().replaceAll("\n", "<br>"));
 		}
 		
-		// 페이징처리
 		String strUrl=cp+"/review/review.do";
 		String paging=util.paging(current_page, total_page, strUrl);
 		
-		// guest.jsp에 넘겨줄 데이터
 		req.setAttribute("list", list);
 		req.setAttribute("page", current_page);
 		req.setAttribute("total_page", total_page);
@@ -84,7 +77,6 @@ public class ReviewServlet extends MyServlet {
 	}
 	
 	private void reviewSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 방명록 저장
 		HttpSession session=req.getSession();
 		SessionInfo info=(SessionInfo)session.getAttribute("member");
 		
@@ -95,15 +87,15 @@ public class ReviewServlet extends MyServlet {
 			return;
 		}
 		
-		ReviewDAO dao=new ReviewDAO();
+		ReviewDAO rdao=new ReviewDAO();
 		
 		try {
-			ReviewDTO dto=new ReviewDTO();
+			ReviewDTO rdto=new ReviewDTO();
 			
-			dto.setReviewId(info.getUserId());
-			dto.setContent(req.getParameter("content"));
+			rdto.setOrderNum(Integer.parseInt(req.getParameter("orderNum")));
+			rdto.setContent(req.getParameter("content"));
 			
-			dao.insertReview(dto);
+			rdao.insertReview(rdto);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -111,8 +103,7 @@ public class ReviewServlet extends MyServlet {
 		resp.sendRedirect(cp+"/review/review.do");
 	}
 	
-	private void reviewDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 방명록 삭제
+	private void deleteReview(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session=req.getSession();
 		SessionInfo info=(SessionInfo)session.getAttribute("member");
 		
@@ -124,12 +115,12 @@ public class ReviewServlet extends MyServlet {
 			return;
 		}
 		
-		ReviewDAO dao=new ReviewDAO();
+		ReviewDAO rdao=new ReviewDAO();
 		
 		try {
-			int orderNum=Integer.parseInt(req.getParameter("orderNum"));
+			int reviewNum=Integer.parseInt(req.getParameter("reviewNum"));
 
-			dao.deleteGuest(orderNum, info.getUserId());
+			rdao.deleteReview(reviewNum);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

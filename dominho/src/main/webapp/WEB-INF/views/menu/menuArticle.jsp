@@ -16,9 +16,9 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resource/js/util.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resource/jquery/js/jquery.min.js"></script>
 <script type="text/javascript">
-function deletePhoto(num) {
+function deleteMenu(menuNum) {
 	if(confirm("메뉴를 삭제 하시겠습니까 ?")) {
-		var url="${pageContext.request.contextPath}";
+		var url="${pageContext.request.contextPath}/menu/menuDelete.do?menuNum="+menuNum+"&${query}";
 		location.href=url;
 	}
 }
@@ -31,7 +31,7 @@ function deletePhoto(num) {
 </div>
 	
 <div class="container">
-    <div class="body-container" style="width: 700px;">
+    <div style="width: 700px; margin: 10px auto;">
         <div class="body-title">
             <h3>메뉴</h3>
         </div>
@@ -51,7 +51,7 @@ function deletePhoto(num) {
 			</tr>
 			
 			<tr>
-				<td colspan="2" align="left" style="padding: 10px 5px; width">
+				<td colspan="2" align="left" style="padding: 10px 5px;">
 					<div>
 			      		<img src="${pageContext.request.contextPath}/uploads/menu/${dto.imageFilename}" style="max-width: 100%; height: auto; resize: both;">
 			      	</div>
@@ -69,28 +69,20 @@ function deletePhoto(num) {
 			    	<c:choose>
 			    		<c:when test="${sessionScope.member.userId=='admin'}">
 			    			<p>재고 : ${mddto.count}</p>
-			          		<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/menu/menuUpdate.do?num=${dto.menuNum}&page=${page}';">수정</button>
+			          		<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/menu/menuUpdate.do?menuNum=${dto.menuNum}&page=${page}';">수정</button>
 			          	</c:when>
-			          	<c:otherwise>
-			          		
-			          	</c:otherwise>
 			        </c:choose>	
-			        <c:choose>
-			        	<c:when test="${sessionScope.member.userId=='admin'}">
-			          		<button type="button" class="btn" onclick="deleteMenu('${dto.menuNum}');">삭제</button>
-			          	</c:when>
-			          	<c:otherwise>
-			          		
-			          	</c:otherwise>
-			        </c:choose>
 			    </td>
 			
+				
 			    <td align="right">
+			    	<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/review/review.do?${query}';">리뷰</button>
 			        <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/menu/menuList.do?${query}';">리스트</button>
 			    </td>
 			</tr>
 			</table>
         </div>
+
 
     </div>
 </div>

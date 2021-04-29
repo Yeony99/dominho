@@ -52,7 +52,7 @@ function searchList() {
 </div>
 
 <div class="container">
-<div class="body-container" style="width: 700px;">
+<div style="width: 700px; margin: 10px auto;">
     <div class="body-title">
         <h3> 메뉴 </h3>
     </div>
@@ -65,21 +65,15 @@ function searchList() {
     		</c:if>
     		<c:if test="${status.index != 0 && status.index%3 == 0}">
     			<c:out value="</tr><tr>" escapeXml="false"/>
-    		</c:if>
+    		</c:if>    		
+    		
     		<td width="210" align="center">
-    			<div class="imgLayout" onclick="location.href='${articleUrl}&num=${dto.menuNum}';">
+    			<div class="imgLayout" onclick="location.href='${articleUrl}&menuNum=${dto.menuNum}';">
     				<img src="${pageContext.request.contextPath}/uploads/menu/${dto.imageFilename}" width="180" height="180">
     				<span class="subject">${dto.menuName}</span>
-    				<c:choose>
-    					<c:when test="${sessionScope.member.userId=='admin'}">
-    						<span>${mddto.count}</span>
-    					</c:when>
-    					<c:otherwise>
-    					
-    					</c:otherwise>
-    				</c:choose>
     			</div>
     		</td>
+    		
     	</c:forEach>
     	
     	<c:set var="n" value="${list.size()}"/>
@@ -118,9 +112,17 @@ function searchList() {
 			            <button type="button" class="btn" onclick="searchList()">검색</button>
 			        </form>
 			      </td>
-		      <td align="right" width="50%">
-		          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/menu/menuCreated.do';">메뉴 올리기</button>
-		      </td>
+		      
+		      <c:choose>
+			        	<c:when test="${sessionScope.member.userId=='admin'}">
+			          		<td align="right" width="50%">
+		          				<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/menu/menuCreated.do';">메뉴 올리기</button>
+		      				</td>
+			          	</c:when>
+			          	<c:otherwise>
+			          		
+			          	</c:otherwise>
+			   </c:choose>
 		   </tr>
 		</table>
 

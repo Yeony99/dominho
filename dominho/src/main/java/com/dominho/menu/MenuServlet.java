@@ -143,14 +143,12 @@ public class MenuServlet extends MyUploadServlet {
 		
 		try {
 			MenuDTO dto = new MenuDTO();
-			//MenuDetailDTO mddto = new MenuDetailDTO();
 			
 			dto.setMenuName(req.getParameter("menuName"));
 			dto.setMenuExplain(req.getParameter("menuExplain"));
 			dto.setMenuPrice(Integer.parseInt(req.getParameter("menuPrice")));
 			dto.setImageFilename(req.getParameter("imageFilename"));
 			dto.setMenuType(req.getParameter("menuType"));
-			//mddto.setCount(Integer.parseInt(req.getParameter("count")));
 			dto.setmemberId(info.getUserId());
 			
 			String filename = null;
@@ -176,7 +174,7 @@ public class MenuServlet extends MyUploadServlet {
 		String query = "page="+page;
 		
 		try {
-			int num = Integer.parseInt(req.getParameter("num"));
+			int menuNum = Integer.parseInt(req.getParameter("menuNum"));
 			
 			String condition = req.getParameter("condition");
 			String keyword = req.getParameter("keyword");
@@ -190,7 +188,7 @@ public class MenuServlet extends MyUploadServlet {
 				query += "&condition="+condition+"&keyword="+URLEncoder.encode(keyword, "utf-8");
 			}
 			
-			MenuDTO dto = dao.readMenu(num);
+			MenuDTO dto = dao.readMenu(menuNum);
 			
 			if(dto == null) {
 				resp.sendRedirect(cp+"/menu/menuList.do?"+query);
@@ -212,24 +210,24 @@ public class MenuServlet extends MyUploadServlet {
 	
 	protected void menuUpdateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String cp = req.getContextPath();
-		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		//HttpSession session = req.getSession();
+		//SessionInfo info = (SessionInfo)session.getAttribute("member");
 		MenuDAO dao = new MenuDAO();
 		
 		String page = req.getParameter("page");
 		
 		try {
-			int num = Integer.parseInt(req.getParameter("num"));
-			MenuDTO dto = dao.readMenu(num);
+			int menuNum = Integer.parseInt(req.getParameter("menuNum"));
+			MenuDTO dto = dao.readMenu(menuNum);
 			
-			if(dto == null || (! dto.getMemberId().equals(info.getUserId()))) {
+			if(dto==null) {
 				resp.sendRedirect(cp+"/menu/menuList.do?page="+page);
 				return;
 			}
 			
 			req.setAttribute("dto", dto);
 			req.setAttribute("page", page);
-			req.setAttribute("mode", "update");
+			req.setAttribute("mode", "menuUpdate");
 			forward(req, resp, "/WEB-INF/views/menu/menuCreated.jsp");
 			return;
 		} catch (Exception e) {
@@ -242,7 +240,6 @@ public class MenuServlet extends MyUploadServlet {
 		String cp = req.getContextPath();
 		MenuDAO dao = new MenuDAO();
 		MenuDTO dto = new MenuDTO();
-		MenuDetailDTO mddto = new MenuDetailDTO();
 		String page = req.getParameter("page");
 		
 		try {
@@ -250,8 +247,8 @@ public class MenuServlet extends MyUploadServlet {
 			dto.setMenuName(req.getParameter("menuName"));
 			dto.setMenuExplain(req.getParameter("menuExplain"));
 			dto.setMenuPrice(Integer.parseInt(req.getParameter("menuPrice")));
-			dto.setMenuType(req.getParameter("menuYType"));
-			mddto.setCount(Integer.parseInt(req.getParameter("count")));
+			dto.setMenuType(req.getParameter("menuType"));
+			//mddto.setCount(Integer.parseInt(req.getParameter("count")));
 			String imageFilename = req.getParameter("imageFilename");
 			Part p = req.getPart("selectFile");
 			Map<String, String> map = doFileUpload(p, pathname);
@@ -262,6 +259,7 @@ public class MenuServlet extends MyUploadServlet {
 			} else {
 				dto.setImageFilename(imageFilename);
 			}
+			dto.setActive(req.getParameter("active"));
 			
 			dao.updateMenu(dto);
 			
@@ -272,9 +270,10 @@ public class MenuServlet extends MyUploadServlet {
 	}
 	
 	protected void menuDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
 		MenuDAO dao = new MenuDAO();
-		HttpSession session = req.getSession();
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		//HttpSession session = req.getSession();
+		//SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		String page = req.getParameter("page");
 		String query = "page="+page;
@@ -292,7 +291,7 @@ public class MenuServlet extends MyUploadServlet {
 			if(keyword.length() != 0) {
 				query += "&condition="+condition+"&keyword="+URLEncoder.encode(keyword,"utf-8");
 			}
-			dao.deleteMenu(menuNum, info.getUserId());
+			dao.deleteMenu(menuNum);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

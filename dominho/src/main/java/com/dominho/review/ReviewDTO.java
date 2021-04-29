@@ -1,14 +1,20 @@
 package com.dominho.review;
 
 public class ReviewDTO {
-	private String ReviewId, content;
-	private int orderNum;
+	private int reviewNum, orderNum;
+	private String content, created;
 	
-	public String getReviewId() {
-		return ReviewId;
+	public int getReviewNum() {
+		return reviewNum;
 	}
-	public void setReviewId(String reviewId) {
-		ReviewId = reviewId;
+	public void setReviewNum(int reviewNum) {
+		this.reviewNum = reviewNum;
+	}
+	public int getOrderNum() {
+		return orderNum;
+	}
+	public void setOrderNum(int orderNum) {
+		this.orderNum = orderNum;
 	}
 	public String getContent() {
 		return content;
@@ -16,10 +22,10 @@ public class ReviewDTO {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public int getOrderNum() {
-		return orderNum;
+	public String getCreated() {
+		return created;
 	}
-	public void setOrderNum(int orderNum) {
-		this.orderNum = orderNum;
-	}	
+	public void setCreated(String created) {
+		this.created = created;
+	}
 }

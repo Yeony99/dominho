@@ -48,7 +48,7 @@
         }
         
         var mode = "${mode}";
-        if( mode=="menuCreated" || (mode=="update" && f.selectFile.value != "") ) {
+        if( mode=="menuCreated" || (mode=="menuUpdate" && f.selectFile.value != "") ) {
         	if(! /(\.gif|\.jpg|\.png|\.jpeg)$/i.test(f.selectFile.value)) {
         		alert("이미지 파일만 가능합니다.");
         		f.selectFile.focus();
@@ -68,7 +68,7 @@
 </div>
 	
 <div class="container">
-    <div class="body-container" style="width: 700px;">
+    <div style="width: 700px; margin: 0px auto;">
         <div class="body-title">
             <h3> 메뉴 </h3>
         </div>
@@ -117,20 +117,26 @@
 			          <input type="file" name="selectFile" class="boxTF" size="53" style="height: 25px;">
 			       </td>
 			  </tr> 
+			  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;">
+			      <td width="100" bgcolor="#eeeeee" style="text-align: center;"> 메뉴 활성화 </td>
+			      <td style="padding-left:10px;"> 
+			          <input type="text" name="active" class="boxTF" size="53" style="height: 25px;">
+			       </td>
+			  </tr> 
 			  </table>
 			
 			  <table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
 			     <tr height="45"> 
 			      <td align="center" >
-			      	<c:if test="${mode=='update'}">
+			      	<c:if test="${mode=='menuUpdate'}">
 			      		<input type="hidden" name="num" value="${dto.menuNum}">
 			      		<input type="hidden" name="imageFilename" value="${dto.imageFilename}">
 			      		<input type="hidden" name="page" value="${page}">
 			      	</c:if>
-			        <button type="button" class="btn" onclick="sendMenu();">${mode=='update'?'수정완료':'등록하기'}</button>
+			        <button type="button" class="btn" onclick="sendMenu();">${mode=='menuUpdate'?'수정완료':'등록하기'}</button>
 			        <button type="reset" class="btn">다시입력</button>
-			        <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/menu/menuList.do';">${mode=='update'?'수정취소':'등록취소'}</button>
-			        <c:if test="${mode=='update'}">
+			        <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/menu/menuList.do';">${mode=='menuUpdate'?'수정취소':'등록취소'}</button>
+			        <c:if test="${mode=='menuUpdate'}">
 			        	<input type="hidden" name="menuNum" value="${dto.menuNum}">
 			        	<input type="hidden" name="page" value="${page}">
 			        </c:if>

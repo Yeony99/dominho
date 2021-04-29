@@ -10,6 +10,7 @@ public class MenuDTO {
 	private String memberId;
 	private int orderNum;
 	private int storeNum;
+	private String active;
 	
 	public int getMenuNum() {
 		return menuNum;
@@ -65,6 +66,12 @@ public class MenuDTO {
 	}
 	public void setStoreNum(int storeNum) {
 		this.storeNum = storeNum;
+	}
+	public String getActive() {
+		return active;
+	}
+	public void setActive(String active) {
+		this.active = active;
 	}
 	
 	
