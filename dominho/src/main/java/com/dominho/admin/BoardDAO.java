@@ -219,7 +219,7 @@ public class BoardDAO {
 				pstmt.setString(1, keyword);
 				pstmt.setString(2, keyword);
 				pstmt.setInt(3, offset);
-				pstmt.setInt(4, offset);
+				pstmt.setInt(4, rows);
 			}else {
 				pstmt.setString(1, keyword);
 				pstmt.setInt(2, offset);

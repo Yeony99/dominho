@@ -126,7 +126,7 @@ a:hover {
 						<select name="condition" class="selectField">
 							<option value="subject" ${condition=="subject"?"selected='selected'":""}>제목</option>
 				            <option value="content" ${condition=="content"?"selected='selected'":"" }>내용</option>			       						
-							<option value="all" ${condition=="all"?"selecte='selected'":""}>제목+내용</option>
+			                  <option value="all" ${condition=="all"?"selected='selected'":"" }>제목+내용</option>
 						</select>
 						<div class="boxTFdiv">
 						<input type="text" name="keyword" class="boxTF" value="${keyword}">

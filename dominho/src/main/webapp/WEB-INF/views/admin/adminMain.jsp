@@ -42,7 +42,7 @@
 
 <div style="padding-top: 40px; padding-left: 425px; padding-bottom: 60px;">
 <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/admin_Member/memberList';">고객정보</button>
-<button type="button" class="btn" style="margin-left: 10px;" onclick="javascript:location.href='${pageContext.request.contextPath}/';">주문내역</button>
+<button type="button" class="btn" style="margin-left: 10px;" onclick="javascript:location.href='${pageContext.request.contextPath}/admin_Order/orderList';">주문내역</button>
 </div>
 
 <div class="footer">

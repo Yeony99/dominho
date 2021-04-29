@@ -144,7 +144,7 @@ function sendBoard() {
 						<td align="center" style="padding-bottom: 30px;">
 							<button type="button" class="btn" onclick="sendBoard();">${mode=='update'?'수정':'등록'}</button>
 							<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/admin/boardList';">${mode=='update'?'수정취소':'등록취소'}</button>
-							<button type="reset" class="btn">재입력</button>
+			        		<button type="reset" class="btn">재입력</button>
 							<c:if test="${mode=='update'}">
 								<input type="hidden" name="postNum" value="${dto.postNum}">
 								<input type="hidden" name="page" value="${page}">					
