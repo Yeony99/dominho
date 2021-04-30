@@ -186,16 +186,13 @@ public class MenuDAO {
 		String sql;
 		
 		try {
-			sql = "SELECT m.menuNum, m.menuName, m.menuPrice, m.imageFileName, m.menuType, c.memberId "
-					+ " FROM menu m "
-					+ " JOIN cart c ON m.menuNum=c.menuNum ";
-			if(condition.equals("all")) {
-				sql += " WHERE INSTR(menuName, ?) >= 1 OR INSTR(menuType, ?) >= 1 ";
+			sql = "SELECT menuNum, menuName, menuPrice, imageFileName, menuType "
+					+ " FROM menu ";
+			if(condition.equals("menuName")) {
+				sql += " WHERE active='yes' AND INSTR(menuName, ?) >= 1 ";
 			} else if(condition.equals("menuType")) {
-				sql += " WHERE(menuType, ?) >= 1";
-			} else {
-				sql += " WHERE INSTR("+condition+", ?) >= 1 ";
-			}
+				sql += " WHERE active='yes' AND ((menuType, ?) >= 1)";
+			} 
 			sql += " ORDER BY menuNum DESC "
 					+ " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ";
 			
@@ -207,14 +204,12 @@ public class MenuDAO {
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				MenuDTO dto = new MenuDTO();
-				MenuDetailDTO mddto = new MenuDetailDTO();
 				dto.setMenuNum(rs.getInt("menuNum"));
 				dto.setMenuName(rs.getString("menuName"));
 				dto.setMenuPrice(rs.getInt("menuPrice"));
 				dto.setImageFilename(rs.getString("imageFilename"));
 				dto.setMenuType(rs.getString("menuType"));
-				mddto.setCount(rs.getInt("count"));
-				
+
 				list.add(dto);
 			}
 		} catch (Exception e) {

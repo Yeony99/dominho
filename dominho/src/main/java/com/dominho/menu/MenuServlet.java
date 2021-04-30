@@ -74,7 +74,7 @@ public class MenuServlet extends MyUploadServlet {
 		String condition = req.getParameter("condition");
 		String keyword = req.getParameter("keyword");
 		if(condition == null) {
-			condition = "all";
+			condition = "menuName";
 			keyword="";
 		}
 		

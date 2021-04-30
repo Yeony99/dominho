@@ -105,7 +105,7 @@ function searchList() {
 			      <td align="center">
 			          <form name="searchForm" action="${pageContext.request.contextPath}/menu/menuList.do" method="post">
 			              <select name="condition" class="selectField">
-			                  <option value="all" ${condition=="all"?"selected='selected'":""}>메뉴+분류</option>
+			                  <option value="menuName" ${condition=="menuName"?"selected='selected'":""}>메뉴</option>
 			                  <option value="menuType" ${condition=="menuType"?"selected='selected'":""}>분류</option>
 			            </select>
 			            <input type="text" name="keyword" class="boxTF" value="${keyword}">
