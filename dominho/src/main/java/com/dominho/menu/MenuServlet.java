@@ -200,6 +200,7 @@ public class MenuServlet extends MyUploadServlet {
 			req.setAttribute("dto", dto);
 			req.setAttribute("page", page);
 			req.setAttribute("query", query);
+			req.setAttribute("page", page);
 			
 			forward(req, resp, "/WEB-INF/views/menu/menuArticle.jsp");
 			return;

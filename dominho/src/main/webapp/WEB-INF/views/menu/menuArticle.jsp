@@ -24,6 +24,11 @@ function deleteMenu(menuNum) {
 }
 
 function addCart() {
+	
+	if(!$("#count").val()||$("#count").val()<=0){
+		alert("올바른 개수를 입력하세요")
+		return
+	}
 	var f=document.cartForm;
 	f.submit();
 }
@@ -77,8 +82,10 @@ function addCart() {
 			          		<button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/menu/menuUpdate.do?menuNum=${dto.menuNum}&page=${page}';">수정</button>
 			          	</c:when>
 			        </c:choose>	
-			        <form name="cartForm" action="${pageContext.request.contextPath}/order/cart.do" method="post">
-			         	<input type="text" name="count" class="boxTF" value="${count}">
+			        <form name="cartForm" action="${pageContext.request.contextPath}/order/cart_add.do" method="post">
+			         	<input type="number" name="count" id="count" class="boxTF" >
+			         	<input type="hidden" name="menuNum" value="${dto.menuNum}">
+			         	<input type="hidden" name="page" value="${page}">
 			         	<button type="button" class="btn" onclick="addCart()">장바구니</button>
 			    	</form>
 			    </td>

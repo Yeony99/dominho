@@ -382,7 +382,7 @@ public class OrderDAO {
 		String sql;
 		
 		try {
-			sql = "SELECT m.menuNum, menuName, menuExplain, menuPrice, imageFileName "
+			sql = "SELECT m.menuNum, menuName, menuExplain, menuPrice, imageFileName, active "
 					+ " FROM menu m "
 					+ " WHERE m.menuNum=?";
 			
@@ -397,6 +397,7 @@ public class OrderDAO {
 				dto.setMenuExplain(rs.getString("menuExplain"));
 				dto.setMenuPrice(rs.getInt("menuPrice"));
 				dto.setImageFilename(rs.getString("imageFileName"));
+				dto.setActive(rs.getString("active"));
 				
 			}
 			

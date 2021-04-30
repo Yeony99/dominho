@@ -180,22 +180,25 @@ public class OrderServlet extends MyServlet {
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		OrderDAO mdao = new OrderDAO();
-
+		int pageNum=Integer.parseInt(req.getParameter("page"));
 		// 메뉴 화면에서 개수를 고르고 장바구니 담기 버튼을 누르면 넘어오는 데이터는 메뉴아이디, 개수
 		// 이 이름으로 넘어온다고 일단 가정. 메뉴 부분 완성되면 수정하기
 		int menuId=Integer.parseInt(req.getParameter("menuNum"));
 		int count=Integer.parseInt(req.getParameter("count"));
 		try {
-			
-			mdao.insertCart(menuId, info.getUserId(), count);
+			MenuDTO menu=mdao.readMenu(menuId);
+			if (!menu.getActive().equals("no")) {//비활성화가 아니어야만 담기가능
+				
+				mdao.insertCart(menuId, info.getUserId(), count);
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		req.setAttribute("menuId", menuId);
+		
 		String cp = req.getContextPath();
-		resp.sendRedirect(cp + "/menu/menuArticle.do");// 해당메뉴 article창으로 다시 돌아가기 )
+		resp.sendRedirect(cp + "/menu/menuArticle.do?page="+pageNum+"&menuNum="+menuId);// 해당메뉴 article창으로 다시 돌아가기 )
 
 	}
 

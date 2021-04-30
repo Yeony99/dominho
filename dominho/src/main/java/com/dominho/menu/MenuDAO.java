@@ -20,8 +20,8 @@ public class MenuDAO {
 		
 		try {
 			
-			sql="INSERT INTO menu(menuNum, menuName, menuExplain, menuPrice, imageFilename, menuType, active) "
-					+ " VALUES(menu_seq.NEXTVAL, ?, ?, ?, ?, ?, ?)";
+			sql="INSERT INTO menu(menuNum, menuName, menuExplain, menuPrice, imageFilename, menuType) "
+					+ " VALUES(menu_seq.NEXTVAL, ?, ?, ?, ?, ?)";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getMenuName());
@@ -29,7 +29,6 @@ public class MenuDAO {
 			pstmt.setInt(3, dto.getMenuPrice());
 			pstmt.setString(4, dto.getImageFilename());
 			pstmt.setString(5, dto.getMenuType());
-			pstmt.setString(6, dto.getActive());
 			
 			result = pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -90,7 +89,7 @@ public class MenuDAO {
 			
 			sb.append(" SELECT menuNum, menuName, menuPrice, imageFileName, menuType ");
 			sb.append(" FROM menu ");
-			sb.append(" WHERE active IS NULL ");
+			sb.append(" WHERE active='yes' ");
 			sb.append(" ORDER BY menuNum DESC ");
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
 			
