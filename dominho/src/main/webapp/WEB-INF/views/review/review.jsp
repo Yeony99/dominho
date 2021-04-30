@@ -57,7 +57,7 @@ function sendReview(){
 }
 
 function deleteReview(reviewNum){
-	var url = "${pageContext.request.contextPath}/review/deleteReview.do?reviewNum="+reviewNum+"&page=${page}";
+	var url = "${pageContext.request.contextPath}/review/delete.do?reviewNum="+reviewNum+"&page=${page}";
 	
 	if(confirm("삭제하시겠습니까?"))
 		location.href=url;

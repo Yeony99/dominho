@@ -27,8 +27,8 @@ public class ReviewServlet extends MyServlet {
 			review(req, resp);
 		} else if(uri.indexOf("review_ok.do")!=-1) {
 			reviewSubmit(req, resp);
-		} else if(uri.indexOf("deleteReview.do")!=-1) {
-			deleteReview(req, resp);
+		} else if(uri.indexOf("delete.do")!=-1) {
+			delete(req, resp);
 		}
 	}
 	
@@ -103,7 +103,7 @@ public class ReviewServlet extends MyServlet {
 		resp.sendRedirect(cp+"/review/review.do");
 	}
 	
-	private void deleteReview(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	private void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session=req.getSession();
 		SessionInfo info=(SessionInfo)session.getAttribute("member");
 		

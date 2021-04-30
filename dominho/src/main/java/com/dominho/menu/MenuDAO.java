@@ -191,7 +191,7 @@ public class MenuDAO {
 			if(condition.equals("menuName")) {
 				sql += " WHERE active='yes' AND INSTR(menuName, ?) >= 1 ";
 			} else if(condition.equals("menuType")) {
-				sql += " WHERE active='yes' AND ((menuType, ?) >= 1)";
+				sql += " WHERE active='yes' AND INSTR(menuType, ?) >= 1";
 			} 
 			sql += " ORDER BY menuNum DESC "
 					+ " OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ";
