@@ -59,6 +59,11 @@ function addCart() {
 			       이름 : ${dto.menuName}
 			    </td>
 			</tr>
+			<tr height="35" style="border-bottom: 1px solid #cccccc;">
+			    <td width="50%" align="left" style="padding-left: 5px;">
+			       가격 : ${dto.menuPrice}
+			    </td>
+			</tr>
 			
 			<tr>
 				<td colspan="2" align="center" style="padding: 10px 5px;">

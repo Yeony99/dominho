@@ -116,14 +116,13 @@
 								<input type="file" name="selectFile" class="boxTF" size="53" style="height: 25px;">
 							</td>
 						</tr>
-						<c:if test="${mode=='menuUpdate'}">
-							<tr align="left" height="40" style="border-bottom: 1px solid #cccccc;">
-								<td width="100" bgcolor="#eeeeee" style="text-align: center;">메뉴 활성화(yes/no)</td>
-								<td style="padding-left: 10px;">
-									<input type="text" name="active" class="boxTF" size="53" style="height: 25px;">
-								</td>
-							</tr>
-						</c:if>
+
+						<tr align="left" height="40" style="border-bottom: 1px solid #cccccc;">
+							<td width="100" bgcolor="#eeeeee" style="text-align: center;">메뉴 활성화(yes/no)</td>
+							<td style="padding-left: 10px;">
+								<input type="text" name="active" class="boxTF" size="53" style="height: 25px;">
+							</td>
+						</tr>
 
 					</table>
 
