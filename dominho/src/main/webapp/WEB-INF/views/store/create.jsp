@@ -114,7 +114,7 @@ function sendStore(){
 		     <tr height="45"> 
 		      <td align="center" >
 		      	<c:if test="${mode=='update'}">
-		      		<input type="hidden" name="num" value="${dto.num}">
+		      		<input type="hidden" name="storeNum" value="${dto.storeNum}">
 		      		<input type="hidden" name="page" value="${page}">
 		      	</c:if>
 		      

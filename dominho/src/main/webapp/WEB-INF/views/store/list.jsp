@@ -46,9 +46,9 @@
 			<table style="width: 100%; border-spacing: 0; border-collapse: collapse;">
 			  <tr align="center" bgcolor="#eeeeee" height="35" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;"> 
 			      <th width="60" style="color: #787878;">No</th>
-			      <th width="60" style="color: #787878;">매장명</th>
-			      <th width="80" style="color: #787878;">매장 번호</th>
-			      <th style="color: #787878;">매장 주소</th>
+			      <th width="75" style="color: #787878;">매장명</th>
+			      <th width="90" style="color: #787878;">매장 번호</th>
+			      <th width="90" style="color: #787878;">매장 주소</th>
 			      <th width="80" style="color: #787878;">오픈시간</th>
 			      <th width="80" style="color: #787878;">마감시간</th>
 			  </tr>
@@ -57,7 +57,7 @@
 			  <tr align="center" height="35" style="border-bottom: 1px solid #cccccc;"> 
 			      <td>${dto.listNum}</td>
 			      <td align="left" style="padding-left: 10px;">
-			           <a href="${articleUrl}&storeNum=${dto.storeNum}">${dto.storeName}</a>
+			           <a href="${pageContext.request.contextPath}/store/update.do?storeNum=${dto.storeNum}&page=${page}">${dto.storeName}</a>
 			      </td>
 			      <td>${dto.storeTel}</td>
 			      <td>${dto.storeAddress}</td>
@@ -78,18 +78,19 @@
 			<table style="width: 100%; margin-top: 10px; border-spacing: 0;">
 			   <tr height="40">
 			      <td align="left" width="100">
-			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/stire/list.do';">새로고침</button>
+			          <button type="button" class="btn" onclick="javascript:location.href='${pageContext.request.contextPath}/store/list.do';">새로고침</button>
 			      </td>
 			      <td align="center">
 			          <form name="searchForm" action="${pageContext.request.contextPath}/store/list.do" method="post">
 			              <select name="condition" class="selectField">
-			                  <option value="storeName">매장명</option>
-			                  <option value="storeTel">매장 번호</option>
-			                  <option value="storeAddress">매장 주소</option>
-			                  <option value="openingHours">오픈 시간</option>
-			                  <option value="closingHours">마감 시간</option>
+			              	  <option value="all" 		${condition=="all"?"selected='selected'":"" }>매장명+매장번호</option>
+			                  <option value="storeName" ${condition=="storeName"?"selected='selected'":"" }>매장명</option>
+			                  <option value="storeTel"	${condition=="storeTel"?"selected='selected'":"" }>매장 번호</option>
+			                  <option value="storeAddress"${condition=="storeAddress"?"selected='selected'":"" }>매장 주소</option>
+			                  <option value="openingHours"${condition=="openingHours"?"selected='selected'":"" }>오픈 시간</option>
+			                  <option value="closingHours"${condition=="closingHours"?"selected='selected'":"" }>마감 시간</option>
 			            </select>
-			            <input type="text" name="keyword" class="boxTF">
+			            <input type="text" name="keyword" class="boxTF" value="${keyword}">
 			            <button type="button" class="btn" onclick="searchList()">검색</button>
 			        </form>
 			      </td>

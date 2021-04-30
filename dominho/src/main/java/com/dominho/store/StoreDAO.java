@@ -252,7 +252,6 @@ public class StoreDAO {
 		try {
 			sql = "SELECT storeNum, storeName, storeTel, storeAddress, openingHours, closingHours, totalSales"
 				+ " FROM store b"
-				+ " JOIN store1 s ON b.storeName = s.storeName "
 				+ " WHERE storeNum = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, num);
@@ -414,7 +413,7 @@ public class StoreDAO {
 
 	        return dto;
 	    }
-/*
+
 	  public int updateStore(StoreDTO dto) throws SQLException {
 	    	int result = 0;
 	    	PreparedStatement pstmt = null;
@@ -430,7 +429,9 @@ public class StoreDAO {
 				pstmt.setString(3, dto.getStoreTel());
 				pstmt.setString(4, dto.getStoreAddress());
 				pstmt.setString(5, dto.getOpeningHours());
-				pstmt.setString(6, dto.getClosingHours());				
+				pstmt.setString(6, dto.getClosingHours());
+				pstmt.setInt(7, dto.getTotalSales());
+				
 				
 				result = pstmt.executeUpdate();
 				
@@ -449,16 +450,17 @@ public class StoreDAO {
 	    	return result;
 	    }
 
-/* 
-	  public int deleteStore(int num) throws SQLException {
+
+	  public int deleteStore(int storeNum, String userid) throws SQLException {
 	    	int result = 0;
 	    	PreparedStatement pstmt = null;
 	    	String sql;
 	    	
 	    	try {
-				sql = "DELETE FROM store WHERE num = ?";
+				sql = "DELETE FROM store WHERE storeNum = ?";
+
 				pstmt = conn.prepareStatement(sql);
-				pstmt.setInt(1, num);
+				pstmt.setInt(1, storeNum);
 				result=pstmt.executeUpdate();
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -474,5 +476,5 @@ public class StoreDAO {
 	    	
 	    	return result;
 	    }
-*/
+
 }
