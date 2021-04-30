@@ -160,6 +160,15 @@ public class MenuServlet extends MyUploadServlet {
 			if(filename != null) {
 				dto.setImageFilename(filename);
 				dao.insertMenu(dto);
+				//메뉴의 메뉴번호 가져오기
+				String menuNum=dao.recentMenu();
+				
+				//모든 가게에 해당 메뉴 값 초기화 해주기 
+				List<String> list=dao.allStoreNum();
+				for(String s:list) {
+					int s2=Integer.parseInt(s);
+					dao.insertMenuDetail(s2, Integer.parseInt(menuNum));
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

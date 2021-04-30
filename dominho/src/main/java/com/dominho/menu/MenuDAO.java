@@ -382,5 +382,106 @@ public class MenuDAO {
 		}
 		return result;
 	}
-
+	//모든 가게 storenum가져오기
+	public List<String> allStoreNum(){
+		List<String> list = new ArrayList<String>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuilder sb = new StringBuilder();
+		
+		try {			
+			
+			sb.append(" SELECT storeNum ");
+			sb.append(" FROM store ");
+			pstmt = conn.prepareStatement(sb.toString());
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				System.out.println(rs.getString("storeNum"));
+				list.add(rs.getString("storeNum"));
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			}
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		return list;
+	}
+	//menudetail 등록
+	public int insertMenuDetail(int store, int menu) throws SQLException {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		try {
+			
+			sql="INSERT INTO menudetail(menudetailId, storenum, menunum, count) "
+					+ " VALUES(menudetail_seq.NEXTVAL, ?, ?, 30)";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, store);
+			pstmt.setInt(2, menu);
+			
+			
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return result;
+	}
+	//가장 최근에 등록한 메뉴의 메뉴번호가져오기
+		public String recentMenu(){
+			String result=null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			StringBuilder sb = new StringBuilder();
+			
+			try {			
+				
+				sb.append(" SELECT menunum from menu where menunum=(select max(menunum) from menu)");
+				pstmt = conn.prepareStatement(sb.toString());
+				rs = pstmt.executeQuery();
+				
+				while(rs.next()) {
+					
+					result=rs.getString(1);
+					
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if(rs != null) {
+					try {
+						rs.close();
+					} catch (SQLException e) {
+					}
+				}
+				if(pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException e) {
+					}
+				}
+			}
+			return result;
+		}
 }
